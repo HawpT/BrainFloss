@@ -7,6 +7,14 @@ package
 
 	public class Assets
 	{
+		/*
+		* These are local files which we will draw on the screen. 
+		* All of the methods in this Class are static, because
+		* no Assets Object needs to be created. This Class just
+		* reads in local files if they exist, and turns them in
+		* to an Image or some other Object, so that flash and
+		* starling know how to draw them onto our stage.
+		*/
 		[Embed("../Assets/soccer.jpg")]
 		public static const field:Class;
 		
@@ -24,6 +32,11 @@ package
 		
 		private static var gameTextures:Dictionary = new Dictionary();
 		
+		
+		/*
+		* We use a dictionary so that we don't have to create multiple 
+		* copies of each image every time we want to use them.
+		*/
 		public static function getTexture(name:String):Texture
 		{
 			if (gameTextures[name] == undefined)

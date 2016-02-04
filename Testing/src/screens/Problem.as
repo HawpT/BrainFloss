@@ -17,6 +17,7 @@ package screens
 	
 	public class Problem extends Sprite
 	{
+		//class variables
 		private var bg:Image;
 		private var player:Image;
 		private var infoButton:Button;
@@ -24,36 +25,63 @@ package screens
 		private var problemText:TextField;
 		private var textFormat:TextFormat;
 		private var starling:Starling;
-		private var operandOne:int;
-		private var operandTwo:int;
+		private var operandOne:Number;
+		private var operandTwo:Number;
 		private var wrong:TextField;
 		private var right:TextField;
+		private var update:TextField;
 		private var answer:String;
 		
+		//default constructor
 		public function Problem() 
 		{
-			operandOne = 3;
-			operandTwo = 4;
+			update = new TextField();
+			update.x = 600;
+			update.y = 400;
+			/*
+			* operand One and Two make up the two parts of our math problem
+			* They are obtained from the static method in RandomProblemGen
+			*/
+			var array:Array = new Array();
+			array = RandomProblemGen.getOperands();
+			operandOne = array[0];
+			operandTwo = array[1];
+			
+			/*
+			* Right and wrong are output messages, but it is necessary to keep
+			* track which ones are on a screen at any given time. If "WRONG!"
+			* is already on the screen, then we don't want to re-draw it.
+			*/
 			right = null;
 			wrong = null;
+			
+			//answer is a string we will use to save stuff form the input box
 			answer = "";
 			super();
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		
+		//You should be used to this default handler by now!
 		private function onAddedToStage():void
 		{
 			trace("welcome screen initialized");
 			
+			//draw the assets for the problem screen
 			drawScreen();
 			
-			//enter the main loop waiting for input
+			//get Input sets up our input listeners
 			getInput();
 			
 		}
 		
-		//setup our text input and output boxes
+		/*
+		* This method does two things:
+		* First, it creates an output text field and an input textfield
+		* Second, it creates listeners for the input field so that we
+		* read what the user types into the box, and then submit it
+		* when the user hits the enter key
+		*/
 		private function getInput():void
 		{
 			inputText = new TextField();
@@ -77,29 +105,68 @@ package screens
 			problemText.backgroundColor = 0xcccccc;
 			problemText.text = operandOne + " + " + operandTwo + " = ";
 			
-			
+			/*
+			* The SoftKeyboard is meant for mobile devices. This is the pop-up that happens
+			* when you touch an input box on a mobile device. These handlers and their methods
+			* below basically make sure that your input box is moved out of the way if a 
+			* soft keyboard would cover it.
+			*/
 			inputText.addEventListener(SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE, onActivateKeyboard);
 			inputText.addEventListener(SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE, onDeactivateKeyboard);
+			
+			/*
+			* The TEXT_INPUT even is attached to the inputText object. This will trigger
+			* whenever a character is ADDED to the input box, but not when characters are
+			* subtracted. This means if the correct answer is '7', but you input '7a', then
+			* hit backspace, only '7' will be in the input box, but the class variable 
+			* answer = "7a". The Event is not triggered by Enter or Backspace. This is fixed
+			* by checking the input box again when submit by pressing enter.
+			*/
 			inputText.addEventListener(TextEvent.TEXT_INPUT, updateAnswer);
+			
+			//The event triggers any time that ANY key is pressed on the keyboard
 			inputText.addEventListener(KeyboardEvent.KEY_DOWN, checkKey);
 			
+			/*
+			* NOTICE: we didn't use a this.addChild() call here. This is because 
+			* the inherited method from the starling Srite class does not have 
+			* support for text input, so we need to use the Flash Framework to
+			* accomplish that. the nativeOverlay what Starling uses to draw
+			* Flash API diplay objects. 
+			*/
 			Starling.current.nativeOverlay.addChild(inputText);
 			Starling.current.nativeOverlay.addChild(problemText);
 			
 		}	
 		
-		//a string equal to what is currently in the input box which updates every time a new character is input
-		
+		//save text currently in the input box
 		protected function updateAnswer(event:TextEvent):void
 		{
-			answer = event.text;
+			answer += event.text;
+			update.text = answer;
+			Starling.current.nativeOverlay.addChild(update);
+			
 		}
 		
-		//checks to see if the enter key has been pressed, if so, then check the answer
+		/*
+		* Checks to see if the enter key has been pressed, if so, then check the answer
+		* For different keys, the keyCodes can be found here:
+		*
+		* http://www.dakmm.com/?p=272
+		*/
 		protected function checkKey(event:KeyboardEvent):void
 		{
+			//create an event so that the answer is always saved before reading
+			
+			
 			if (event.keyCode == 13)
 				checkAnswer(answer)
+				
+			else if (event.keyCode == 8)
+				answer = answer.substr(0,answer.length - 1);
+			
+			update.text = answer;
+			Starling.current.nativeOverlay.addChild(update);
 		}
 		
 		//check the answer
