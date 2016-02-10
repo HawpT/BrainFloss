@@ -1,5 +1,6 @@
 var soccer = soccer || {};
-var answer = "";
+var answer;
+var answerOutput;
 var button;
 var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
 var numbuttons;
@@ -38,7 +39,16 @@ soccer.PlayState.prototype = {
         numbuttons.add(eightbutton);
         numbuttons.add(ninebutton);
         numbuttons.add(zerobutton);
-        onebutton.onInputUpHandler(this.clicked.bind(this, onebutton),this);
+        onebutton.onInputUp.add(this.clicked.bind(this, onebutton),this);
+        twobutton.onInputUp.add(this.clicked.bind(this, twobutton),this);
+        threebutton.onInputUp.add(this.clicked.bind(this, threebutton),this);
+        fourbutton.onInputUp.add(this.clicked.bind(this, fourbutton),this);
+        fivebutton.onInputUp.add(this.clicked.bind(this, fivebutton),this);
+        sixbutton.onInputUp.add(this.clicked.bind(this, sixbutton),this);
+        sevenbutton.onInputUp.add(this.clicked.bind(this, sevenbutton),this);
+        eightbutton.onInputUp.add(this.clicked.bind(this, eightbutton),this);
+        ninebutton.onInputUp.add(this.clicked.bind(this, ninebutton),this);
+        zerobutton.onInputUp.add(this.clicked.bind(this, zerobutton),this);
 
 
 
@@ -47,6 +57,7 @@ soccer.PlayState.prototype = {
         this.game.add.text(300, 284, text, {font: '32px Arial', fill: '#000'});
 
         answer = "";
+        answerOutput = this.game.add.text(400,500,answer,{font: '32px Arial', fill: '#000'});;
     },
 
     update: function () {
@@ -55,7 +66,7 @@ soccer.PlayState.prototype = {
     },
 
     actionOnClicked: function() {
-        window.alert("A button has been pressed.");
+
     },
 
     clicked: function(b) {
@@ -94,7 +105,7 @@ soccer.PlayState.prototype = {
                 answer += 'x';
 
         }
-        this.game.add.text(0,0,answer,{font: '32px Arial', fill: '#000'});
+        answerOutput.setText(answer);
 
     },
 
