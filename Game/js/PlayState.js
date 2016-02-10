@@ -38,7 +38,7 @@ soccer.PlayState.prototype = {
         numbuttons.add(eightbutton);
         numbuttons.add(ninebutton);
         numbuttons.add(zerobutton);
-        onebutton.onInputUpHandler(this.clicked(onebutton),this);
+        onebutton.onInputUpHandler(this.clicked.bind(this, onebutton),this);
 
 
 
@@ -55,7 +55,7 @@ soccer.PlayState.prototype = {
     },
 
     actionOnClicked: function() {
-
+        window.alert("A button has been pressed.");
     },
 
     clicked: function(b) {
@@ -90,6 +90,8 @@ soccer.PlayState.prototype = {
             case zerobutton:
                 answer += '0';
                 break;
+            default:
+                answer += 'x';
 
         }
         this.game.add.text(0,0,answer,{font: '32px Arial', fill: '#000'});
