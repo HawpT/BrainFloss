@@ -13,6 +13,11 @@
     <script src = "{% static 'js/Preload.js'%}"> </script>
     <script src = "{% static 'js/Menu.js'%}"> </script>
     <script src = "{% static 'js/LabelButton.js'%}"></script>
+	<img src = "{% static "playgame/ball.png" %}" alt = "ball"/>
+	<img src = "{% static "playgame/soccerfield.jpg" %}" alt = "field"/>
+	<img src = "{% static "playgame/player.png" %}" alt = "player"/>
+	<img src = "{% static "playgame/orangebutton.png" %}" alt = "numbutton"/>
+
 
     <style type="text/css">
         body {
@@ -22,6 +27,6 @@
 </head>
 <body>
     <script src = "{% static 'js/Main.js'%}"></script>
-	
+
 </body>
 </html>
