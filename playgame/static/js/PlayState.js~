@@ -144,7 +144,6 @@ soccer.PlayState.prototype = {
         var array = this.randomProblemGenerator(1);
         num1 = array[0];
         num2 = array[1];
-	problem.setText(num1 + ' + ' + num2 + ' = ');
     },
 
 
