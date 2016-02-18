@@ -33,7 +33,7 @@ soccer.PlayState.prototype = {
         subbutton.anchor.set(0.5);
         subbutton.scale.setTo(0.5,0.5);
         subbutton.style = {font: '70px Arial', fill: '#000'};
-        var subtext =
+
         subbutton.setLabel('SUBMIT');
         subbutton.onInputUp.add(this.checkAnswer.bind(this),this);
 
@@ -132,14 +132,18 @@ soccer.PlayState.prototype = {
 
     checkAnswer: function() {
         if (num1 + num2 == parseInt(answer)) {
-            validate.setText("RIGHT!");
+            validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is right!");
         }
         else {
-            validate.setText("WRONG!");
+            validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
         }
 
         answer = "";
         answerOutput.setText(answer);
+
+        var array = this.randomProblemGenerator(1);
+        num1 = array[0];
+        num2 = array[1];
     },
 
 
@@ -181,10 +185,9 @@ soccer.PlayState.prototype = {
             n = n%8;
         else if(r === 2)
             n = n%9;
-        else if(r === 1)
-            n = n%10;
         else
-            n = n; //put here for my peace of mind
+            n = n%10;
+
 
         return [r, n];
 
