@@ -19,10 +19,10 @@ soccer.PlayState.prototype = {
     create: function () {
 
         //draw the background image
-        bg = this.game.add.image(0,0,'playfield');
+        bg = this.game.add.image(0,0,'field');
 
         //draw the player
-        player =  this.game.add.image(100,100,'soccerplayer');
+        player =  this.game.add.image(100,400,'player');
         player.scale.setTo(0.5,0.5);
 
 
@@ -36,19 +36,19 @@ soccer.PlayState.prototype = {
         sevenbutton = new LabelButton(soccer.game,390,30,'numbutton','7',this.actionOnClicked,this,0,0,0,0);
         eightbutton = new LabelButton(soccer.game,450,30,'numbutton','8',this.actionOnClicked,this,0,0,0,0);
         ninebutton = new LabelButton(soccer.game,510,30,'numbutton','9',this.actionOnClicked,this,0,0,0,0);
-        zerobutton = new LabelButton(soccer.game,30,30,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
+        zerobutton = new LabelButton(soccer.game,570,30,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
         delbutton = new LabelButton(soccer.game,630,30,'numbutton','Delete',this.actionOnClicked,this,0,0,0,0);
-        subbutton = new LabelButton(soccer.game,400,300,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
+        subbutton = new LabelButton(soccer.game,300,520,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
         subbutton.anchor.set(0.5);
         subbutton.scale.setTo(0.25,0.25);
-        subbutton.style = {font: '48px Arial', fill: '#000'};
+        subbutton.style = {font: '90px Arial', fill: '#000'};
         subbutton.setLabel('SUBMIT');
         subbutton.onInputUp.add(this.checkAnswer.bind(this),this);
 
 
-        //creat a group for all the buttons
+        //create a group for all the buttons
         numbuttons = this.game.add.group();
         numbuttons.add(onebutton);
         numbuttons.add(twobutton);
@@ -84,13 +84,13 @@ soccer.PlayState.prototype = {
         text = num1 + ' + ' + num2 + ' = ';
 
         //output the problem
-        problem = this.game.add.text(290, 420, text, {font: '32px Arial', fill: '#000'});
+        problem = this.game.add.text(390, 420, text, {font: '32px Arial', fill: '#000'});
 
         //create a text field for answer validation
-        validate = this.game.add.text(300,480,answer, {font: '32px Arial', fill: '#000'});
+        validate = this.game.add.text(400,480,answer, {font: '32px Arial', fill: '#000'});
 
         //output the students answer
-        answerOutput = this.game.add.text(410,420,answer,{font: '32px Arial', fill: '#000'});
+        answerOutput = this.game.add.text(510,420,answer,{font: '32px Arial', fill: '#000'});
     },
 
     //not used yet
