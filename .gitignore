@@ -1,3 +1,7 @@
+#Customs for our project
+.idea
+*.iml
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -13,8 +17,6 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
-.idea
-Game/.idea
 
 # Windows shortcuts
 *.lnk
