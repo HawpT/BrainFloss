@@ -4,7 +4,7 @@ A Math Learning Program for First and Second Grade students.
 
 Written by Kevin Haupty, Aspen Hopkins, Colette Bedoya and Jacob Chavarria
 
-STARTING YOUR VIRTUAL MACHINE
+*STARTING YOUR VIRTUAL MACHINE*
 
 STEP 1
 
