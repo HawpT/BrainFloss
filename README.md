@@ -46,6 +46,8 @@ Use ‘sudo apt-get install dkms’
 
 guest additions install
 
+**guest additions enable resolution, sound, copy/paste from host/client, enable usb to VM etc.**
+
 Go to devices -> insert guest additions cd image -> restart device
 
 Double click extension to install
