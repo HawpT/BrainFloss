@@ -1,5 +1,6 @@
 var soccer = soccer || {};
 
+//default canvas on which Phaser will draw
 soccer.game = new Phaser.Game(800,600, Phaser.AUTO, '');
 
 //These are global variables visible anywhere in the project.
@@ -9,11 +10,6 @@ var delay = 0;
 var num1 = 4;
 var num2 = 3;
 var text = "";
-var backspace;
-var enter;
-var kbd;
-
-
 
 //Adding all the state we will need in our game.
 soccer.game.state.add('Preload', soccer.Preload);
