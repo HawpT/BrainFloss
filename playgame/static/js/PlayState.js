@@ -1,5 +1,7 @@
-
 var soccer = soccer || {};
+
+var loadPlayState = function (){
+
 
 //local class variables
 var answer;
@@ -19,7 +21,7 @@ soccer.PlayState.prototype = {
     create: function () {
 
         //draw the background image
-        bg = this.game.add.image(0,0,'field');
+        bg = this.game.add.image(0,0,'playfield');
 
         //draw the player
         player =  this.game.add.image(100,400,'player');
@@ -37,7 +39,7 @@ soccer.PlayState.prototype = {
         eightbutton = new LabelButton(soccer.game,450,30,'numbutton','8',this.actionOnClicked,this,0,0,0,0);
         ninebutton = new LabelButton(soccer.game,510,30,'numbutton','9',this.actionOnClicked,this,0,0,0,0);
         zerobutton = new LabelButton(soccer.game,570,30,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
-        delbutton = new LabelButton(soccer.game,630,30,'numbutton','Delete',this.actionOnClicked,this,0,0,0,0);
+        delbutton = new LabelButton(soccer.game,630,30,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
         subbutton = new LabelButton(soccer.game,300,520,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
@@ -46,8 +48,10 @@ soccer.PlayState.prototype = {
         subbutton.style = {font: '90px Arial', fill: '#000'};
         subbutton.setLabel('SUBMIT');
         subbutton.onInputUp.add(this.checkAnswer.bind(this),this);
-
-
+	
+	//delbutton.scale.setTo(2,1);
+	//delbutton.label.setText(soccer.game, 0, 0, "delete", {font: '20px Arial', fill: '#000'});
+	
         //create a group for all the buttons
         numbuttons = this.game.add.group();
         numbuttons.add(onebutton);
@@ -352,6 +356,7 @@ soccer.PlayState.prototype = {
     },
 
 
+};
 };
 
 
