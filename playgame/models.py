@@ -7,6 +7,9 @@ from django.db import models
 class Scores(models.Model):
 	student_id = models.IntegerField()
 	score = models.IntegerField()
+	
+	def __str__ (self):
+		return self.student_id  #do I need this?
 
 class Level_One(models.Model):
 	score = models.IntegerField()

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            <h1>Hello Student</h1>
+            <p>You are on your Dashboard</p>
+            <div>
+            <a href="/playgame" target="_top">Play Level 1</a>
+            </div>
+            <div>
+            <a href="/playgame" target="_top">Play Level 2</a>
+            </div>
+            <div>
+            <a href="/playgame" target="_top">Play Level 3</a>
+            </div>
+            <div>
+            <a href="/viewstats" target="_top">View your stats</a>
+            </div>
+            
+       
+        </div>
+    </div>
+</div>
+<script src = "{% static 'js/Main.js'%}"></script>
+{% endblock %}
+
+
