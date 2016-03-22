@@ -21,7 +21,7 @@ soccer.PlayState.prototype = {
     create: function () {
 		playerDirection = 0;
         //draw the background image
-        bg = this.game.add.image(-500,-100,'playfield');
+        bg = this.game.add.image(-900,-1200,'playfield');
 	
         //draw the player
         player =  this.game.add.sprite(100,400,'player',8);

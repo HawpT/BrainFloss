@@ -9,7 +9,7 @@ soccer.Preload.prototype = {
         //load images
 	    this.load.image('ball','../static/playgame/ball.png');
         this.load.image('field','../static/playgame/soccerfield.jpg');
-        this.load.image('player','../static/playgame/soccerplayer.png');
+        this.load.spritesheet('player','../static/playgame/spineboy-old-walk.png',105,170,27);
         this.load.image('numbutton','../static/playgame/orangebutton.png');
         this.load.image('playfield','../static/playgame/playfield.png');
 
