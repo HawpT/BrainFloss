@@ -10,9 +10,9 @@ var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,s
 var numbuttons;
 var delbutton, subbutton, button;
 var text = new Text();
-var player, bg;
+var player, opponent, bg;
 var anim, walk, playerDirection;
-
+var resetPlayerDirection,ballAnimationCounter;
 soccer.PlayState = function() {};
 
 //prototype the game state
@@ -20,15 +20,23 @@ soccer.PlayState.prototype = {
 
     create: function () {
 		playerDirection = 0;
+		ballAnimationCounter = 0;
         //draw the background image
         bg = this.game.add.image(-500,-100,'playfield');
 	
         //draw the player
-        player =  this.game.add.sprite(100,400,'player',8);
-        player.scale.set(1);
-		player.anchor.setTo(0,0);
+        player =  this.game.add.sprite(50,350,'player',8);
+        player.scale.set(1.5);
+		player.anchor.setTo(.5,.5);
 		walk = player.animations.add('walk');
 
+		//draw the opponent
+		opponent = this.game.add.sprite(350, 350, 'player',8);
+		opponent.scale.set(1.5);
+		opponent.anchor.setTo(.5,.5);
+		opponent.scale.x *= -1;
+		opponentWalk = opponent.animations.add('opponentWalk');
+	
 
         //add the number input buttons to the screen
         onebutton = new LabelButton(soccer.game,30,30,'numbutton','1',this.actionOnClicked,this,0,0,0,0);
@@ -42,10 +50,10 @@ soccer.PlayState.prototype = {
         ninebutton = new LabelButton(soccer.game,510,30,'numbutton','9',this.actionOnClicked,this,0,0,0,0);
         zerobutton = new LabelButton(soccer.game,570,30,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
         delbutton = new LabelButton(soccer.game,630,30,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
-        subbutton = new LabelButton(soccer.game,300,520,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
+        subbutton = new LabelButton(soccer.game,190,450,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
-        subbutton.anchor.set(0.5);
+        subbutton.anchor.set(0.5,0.5);
         subbutton.scale.setTo(0.25,0.25);
         subbutton.style = {font: '90px Arial', fill: '#000'};
         subbutton.setLabel('SUBMIT');
@@ -99,12 +107,48 @@ soccer.PlayState.prototype = {
         answerOutput = this.game.add.text(510,420,answer,{font: '32px Arial', fill: '#000'});
     },
 
-    //not used yet
+    
     update: function () {
-	if(walk.isPlaying)
+		if(walk.isPlaying & playerDirection ===0)
+			{
+				bg.x -=2;
+				subbutton.x -=2;
+			}
+		else if(walk.isPlaying & playerDirection ===1){
+			bg.x +=2;
+			subbutton.x +=2;
+			}
+		//Player answered wrong
+		if(!walk.isPlaying & playerDirection ===1 & resetPlayerDirection === 1)
 		{
-			bg.x -=1;
+			player.scale.x *= -1;
+			resetPlayerDirection = 0;
+			playerDirection = 0;
+		 	ballAnimationCounter = -1;
+		 	subbutton.x -= 1;
 		}
+		//played answered right
+		else if (!walk.isPlaying & resetPlayerDirection ===1){
+			opponent.scale.x *= -1;
+			resetPlayerDirection = 0;
+			ballAnimationCounter = 1;
+			subbutton.x += 1;
+		}
+		if (Math.abs(ballAnimationCounter) === 30)
+			ballAnimationCounter = 0;
+		
+		if (ballAnimationCounter != 0){
+			if(ballAnimationCounter > 0){
+				subbutton.x += 2;
+				ballAnimationCounter += 1;
+			}
+			else{
+				subbutton.x -= 1;
+				ballAnimationCounter -= 1;
+			}
+		}
+				
+		
 
     },
 
@@ -163,34 +207,25 @@ soccer.PlayState.prototype = {
 
     //helper method to check whether the answer is right or wrong and provide feedback
     checkAnswer: function() {
-		
-        if (num1 + num2 == parseInt(answer)) {
+		//if answer is right
+        if (num1 + num2 == parseInt(answer))
+		 {
             validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is right!");
-			if(playerDirection ===0){
-				player.animations.play('walk', 60, false);
-				//playerDirection = 0;
-			}
-			else{
-				player.scale.x *= -1;
-				player.animations.play('walk',60,false);
-				playerDirection = 0;
-				}
+			resetPlayerDirection = 1;
+			player.animations.play('walk', 60, false);
+			opponent.scale.x *= -1;
+			opponent.animations.play('opponentWalk',60,false);
         }
+
+
         else {
-			if(playerDirection === 1){
-            	validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
-				//player.scale.x *= -1;
-				player.animations.play('walk', 60, false);
-				//playerDirection = 0;
-			}
-			else{
-				validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
-				player.scale.x *= -1;
-				player.animations.play('walk', 60, false);
-				playerDirection = 1;
-				
-			}
-        }
+			validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
+			player.scale.x *= -1;			
+			player.animations.play('walk', 60, false);
+			opponent.animations.play('opponentWalk',60,false);
+			playerDirection = 1;
+			resetPlayerDirection = 1;
+		    }
 
         //output a new problem to the user
         answer = "";
