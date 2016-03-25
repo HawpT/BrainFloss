@@ -31,8 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'mygame',
-    'debug_toolbar',
     'playgame',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,7 +57,7 @@ ROOT_URLCONF = 'mygame.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,8 +78,12 @@ WSGI_APPLICATION = 'mygame.wsgi.application'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(BASE_DIR, 'dbsqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'math_game',
+	'USER': 'admin',
+	'PASSWORD': 'admin',
+	'HOST': 'localhost',
+	'PORT': '3306',
     }
 }
 
@@ -105,8 +107,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-
 LOGIN_REDIRECT_URL = '/' #means home view
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')

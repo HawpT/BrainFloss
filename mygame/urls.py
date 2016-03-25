@@ -21,7 +21,7 @@ from playgame.forms import LoginForm
 
 urlpatterns = [
     url(r'^playgame/', include('playgame.urls')),
-  #  url(r'^playgame/$', include('views.playgame')), #extra
+  
     
     url(r'^login/$', views.login, {'template_name': 'login.html', 'authentication_form': LoginForm}),
    url(r'^logout/$', views.logout, {'next_page': '/login'}),
