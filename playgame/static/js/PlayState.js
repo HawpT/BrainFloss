@@ -22,18 +22,29 @@ soccer.PlayState.prototype = {
 		playerDirection = 0;
 		ballAnimationCounter = 0;
         //draw the background image
-        bg = this.game.add.image(400,0,'playfield');
-        bg.anchor.setTo(0.5,0);
-		bg.scale.set(1);
+        bg = this.game.add.image(-500,-100,'playfield');
+	
         //draw the player
         player =  this.game.add.sprite(278,350,'player',8);
         player.scale.set(1.2);
+=======
+        bg = this.game.add.image(-500,-100,'playfield');
+	
+        //draw the player
+        player =  this.game.add.sprite(50,350,'player',8);
+        player.scale.set(1.5);
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 		player.anchor.setTo(.5,.5);
 		walk = player.animations.add('walk');
 
 		//draw the opponent
+<<<<<<< HEAD
 		opponent = this.game.add.sprite(522, 350, 'opponent',8);
 		opponent.scale.set(1.2);
+=======
+		opponent = this.game.add.sprite(350, 350, 'player',8);
+		opponent.scale.set(1.5);
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 		opponent.anchor.setTo(.5,.5);
 		opponent.scale.x *= -1;
 		opponentWalk = opponent.animations.add('opponentWalk');
@@ -51,6 +62,7 @@ soccer.PlayState.prototype = {
         ninebutton = new LabelButton(soccer.game,510,30,'numbutton','9',this.actionOnClicked,this,0,0,0,0);
         zerobutton = new LabelButton(soccer.game,570,30,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
         delbutton = new LabelButton(soccer.game,630,30,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
+<<<<<<< HEAD
         subbutton = new LabelButton(soccer.game,400,400,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
@@ -58,6 +70,15 @@ soccer.PlayState.prototype = {
         subbutton.scale.setTo(0.15,0.15);
         subbutton.style = {font: '90px Arial', fill: '#000'};
         subbutton.setLabel('');
+=======
+        subbutton = new LabelButton(soccer.game,190,450,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
+
+        //The submit button
+        subbutton.anchor.set(0.5,0.5);
+        subbutton.scale.setTo(0.25,0.25);
+        subbutton.style = {font: '90px Arial', fill: '#000'};
+        subbutton.setLabel('SUBMIT');
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
         subbutton.onInputUp.add(this.checkAnswer.bind(this),this);
 	
 	//delbutton.scale.setTo(2,1);
@@ -99,25 +120,42 @@ soccer.PlayState.prototype = {
         text = num1 + ' + ' + num2 + ' = ';
 
         //output the problem
+<<<<<<< HEAD
         problem = this.game.add.text(450, 420, text, {font: '32px Arial', fill: '#000'});
+=======
+        problem = this.game.add.text(390, 420, text, {font: '32px Arial', fill: '#000'});
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 
         //create a text field for answer validation
         validate = this.game.add.text(400,480,answer, {font: '32px Arial', fill: '#000'});
 
         //output the students answer
+<<<<<<< HEAD
         answerOutput = this.game.add.text(550,420,answer,{font: '32px Arial', fill: '#000'});
+=======
+        answerOutput = this.game.add.text(510,420,answer,{font: '32px Arial', fill: '#000'});
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
     },
 
     
     update: function () {
 		if(walk.isPlaying & playerDirection ===0)
 			{
+<<<<<<< HEAD
 				bg.x -=3;
 				subbutton.x -=3;
 			}
 		else if(walk.isPlaying & playerDirection ===1){
 			bg.x +=3;
 			subbutton.x +=3;
+=======
+				bg.x -=2;
+				subbutton.x -=2;
+			}
+		else if(walk.isPlaying & playerDirection ===1){
+			bg.x +=2;
+			subbutton.x +=2;
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 			}
 		//Player answered wrong
 		if(!walk.isPlaying & playerDirection ===1 & resetPlayerDirection === 1)
@@ -125,12 +163,17 @@ soccer.PlayState.prototype = {
 			player.scale.x *= -1;
 			resetPlayerDirection = 0;
 			playerDirection = 0;
+<<<<<<< HEAD
+=======
+		 	ballAnimationCounter = -1;
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 		 	subbutton.x -= 1;
 		}
 		//played answered right
 		else if (!walk.isPlaying & resetPlayerDirection ===1){
 			opponent.scale.x *= -1;
 			resetPlayerDirection = 0;
+<<<<<<< HEAD
 			subbutton.x += 1;
 		}
 		
@@ -144,6 +187,24 @@ soccer.PlayState.prototype = {
 			subbutton.x -= 2;
 		}
 			
+=======
+			ballAnimationCounter = 1;
+			subbutton.x += 1;
+		}
+		if (Math.abs(ballAnimationCounter) === 30)
+			ballAnimationCounter = 0;
+		
+		if (ballAnimationCounter != 0){
+			if(ballAnimationCounter > 0){
+				subbutton.x += 2;
+				ballAnimationCounter += 1;
+			}
+			else{
+				subbutton.x -= 1;
+				ballAnimationCounter -= 1;
+			}
+		}
+>>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 				
 		
 
