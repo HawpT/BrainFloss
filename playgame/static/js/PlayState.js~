@@ -32,7 +32,7 @@ soccer.PlayState.prototype = {
 		walk = player.animations.add('walk');
 
 		//draw the opponent
-		opponent = this.game.add.sprite(522, 350, 'opponent',8);
+		opponent = this.game.add.sprite(522, 350, 'player',8);
 		opponent.scale.set(1.2);
 		opponent.anchor.setTo(.5,.5);
 		opponent.scale.x *= -1;
