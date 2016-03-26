@@ -29,24 +29,20 @@ soccer.PlayState.prototype = {
         subtractionMode = 0;
 
         //draw the background image
-        bg = this.game.add.image(-500,-100,'playfield');
+        bg = this.game.add.image(-1575,0,'playfield');
 	
-        //draw the player
+       
+	
+        //draw the play
         player =  this.game.add.sprite(278,350,'player',8);
         player.scale.set(1.2);
-        bg = this.game.add.image(-500,-100,'playfield');
-	
-        //draw the player
-        player =  this.game.add.sprite(50,350,'player',8);
-        player.scale.set(1.5);
 		player.anchor.setTo(.5,.5);
 		walk = player.animations.add('walk');
 
 		//draw the opponent
 		opponent = this.game.add.sprite(522, 350, 'opponent',8);
 		opponent.scale.set(1.2);
-		opponent = this.game.add.sprite(350, 350, 'player',8);
-		opponent.scale.set(1.5);
+		
 		opponent.anchor.setTo(.5,.5);
 		opponent.scale.x *= -1;
 		var opponentWalk = opponent.animations.add('opponentWalk');
@@ -71,18 +67,10 @@ soccer.PlayState.prototype = {
         subbutton.scale.setTo(0.15,0.15);
         subbutton.style = {font: '90px Arial', fill: '#000'};
         subbutton.setLabel('');
-        subbutton = new LabelButton(soccer.game,190,450,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
-
-        //The submit button
-        subbutton.anchor.set(0.5,0.5);
-        subbutton.scale.setTo(0.25,0.25);
-        subbutton.style = {font: '90px Arial', fill: '#000'};
-        subbutton.setLabel('SUBMIT');
         subbutton.onInputUp.add(this.checkAnswer.bind(this),this);
+       
 	
-	    //delbutton.scale.setTo(2,1);
-	    //delbutton.label.setText(soccer.game, 0, 0, "delete", {font: '20px Arial', fill: '#000'});
-	
+	    
         //create a group for all the buttons
         numbuttons = this.game.add.group();
         numbuttons.add(onebutton);
@@ -119,16 +107,16 @@ soccer.PlayState.prototype = {
         text = num1 + ' + ' + num2 + ' = ';
 
         //output the problem
-        problem = this.game.add.text(550, 420, text, {font: '32px Arial', fill: '#000'});
+        problem = this.game.add.text(550, 520, text, {font: '32px Arial', fill: '#000'});
         //set the anchor to the top right corner so it is always placed next to our answer.
         problem.anchor.set(1,0);
 
         //create a text field for answer validation
-        validate = this.game.add.text(400,480,answer, {font: '32px Arial', fill: '#000'});
+        validate = this.game.add.text(400,560,answer, {font: '32px Arial', fill: '#000'});
 
         //output the students answer
         answerOutput = this.game.add.text(problem.x + 5 /*position to the right of the problem text*/
-            ,420,answer,{font: '32px Arial', fill: '#000'});
+            ,problem.y,answer,{font: '32px Arial', fill: '#000'});
     },
 
     
