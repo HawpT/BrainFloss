@@ -2,52 +2,54 @@ var soccer = soccer || {};
 
 var loadPlayState = function (){
 
+    var answerOutput, validate, problem, answer;
+    var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
+    var numbuttons;
+    var delbutton, subbutton, button;
+    var text = new Text();
+    var player, opponent, bg;
+    var anim, walk, playerDirection;
+    var resetPlayerDirection,winCondition,subtractionMode,problemLevel;
 
-//local class variables
-var answer;
-var answerOutput, validate, problem;
-var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
-var numbuttons;
-var delbutton, subbutton, button;
-var text = new Text();
-var player, opponent, bg;
-var anim, walk, playerDirection;
-var resetPlayerDirection,ballAnimationCounter;
 soccer.PlayState = function() {};
 
 //prototype the game state
 soccer.PlayState.prototype = {
 
+
     create: function () {
+        //initial variable declarations
 		playerDirection = 0;
-		ballAnimationCounter = 0;
+        winCondition = 0;
+
+        //set problem level here, 1, 2 or 3
+        problemLevel = 1;
+
+        //set subtraction mode to 1 for subtraction problems, 2 for addition
+        subtractionMode = 0;
+
         //draw the background image
         bg = this.game.add.image(-500,-100,'playfield');
 	
         //draw the player
         player =  this.game.add.sprite(278,350,'player',8);
         player.scale.set(1.2);
-=======
         bg = this.game.add.image(-500,-100,'playfield');
 	
         //draw the player
         player =  this.game.add.sprite(50,350,'player',8);
         player.scale.set(1.5);
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 		player.anchor.setTo(.5,.5);
 		walk = player.animations.add('walk');
 
 		//draw the opponent
-<<<<<<< HEAD
 		opponent = this.game.add.sprite(522, 350, 'opponent',8);
 		opponent.scale.set(1.2);
-=======
 		opponent = this.game.add.sprite(350, 350, 'player',8);
 		opponent.scale.set(1.5);
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 		opponent.anchor.setTo(.5,.5);
 		opponent.scale.x *= -1;
-		opponentWalk = opponent.animations.add('opponentWalk');
+		var opponentWalk = opponent.animations.add('opponentWalk');
 	
 
         //add the number input buttons to the screen
@@ -62,7 +64,6 @@ soccer.PlayState.prototype = {
         ninebutton = new LabelButton(soccer.game,510,30,'numbutton','9',this.actionOnClicked,this,0,0,0,0);
         zerobutton = new LabelButton(soccer.game,570,30,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
         delbutton = new LabelButton(soccer.game,630,30,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
-<<<<<<< HEAD
         subbutton = new LabelButton(soccer.game,400,400,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
@@ -70,7 +71,6 @@ soccer.PlayState.prototype = {
         subbutton.scale.setTo(0.15,0.15);
         subbutton.style = {font: '90px Arial', fill: '#000'};
         subbutton.setLabel('');
-=======
         subbutton = new LabelButton(soccer.game,190,450,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
@@ -78,11 +78,10 @@ soccer.PlayState.prototype = {
         subbutton.scale.setTo(0.25,0.25);
         subbutton.style = {font: '90px Arial', fill: '#000'};
         subbutton.setLabel('SUBMIT');
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
         subbutton.onInputUp.add(this.checkAnswer.bind(this),this);
 	
-	//delbutton.scale.setTo(2,1);
-	//delbutton.label.setText(soccer.game, 0, 0, "delete", {font: '20px Arial', fill: '#000'});
+	    //delbutton.scale.setTo(2,1);
+	    //delbutton.label.setText(soccer.game, 0, 0, "delete", {font: '20px Arial', fill: '#000'});
 	
         //create a group for all the buttons
         numbuttons = this.game.add.group();
@@ -120,100 +119,80 @@ soccer.PlayState.prototype = {
         text = num1 + ' + ' + num2 + ' = ';
 
         //output the problem
-<<<<<<< HEAD
-        problem = this.game.add.text(450, 420, text, {font: '32px Arial', fill: '#000'});
-=======
-        problem = this.game.add.text(390, 420, text, {font: '32px Arial', fill: '#000'});
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
+        problem = this.game.add.text(550, 420, text, {font: '32px Arial', fill: '#000'});
+        //set the anchor to the top right corner so it is always placed next to our answer.
+        problem.anchor.set(1,0);
 
         //create a text field for answer validation
         validate = this.game.add.text(400,480,answer, {font: '32px Arial', fill: '#000'});
 
         //output the students answer
-<<<<<<< HEAD
-        answerOutput = this.game.add.text(550,420,answer,{font: '32px Arial', fill: '#000'});
-=======
-        answerOutput = this.game.add.text(510,420,answer,{font: '32px Arial', fill: '#000'});
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
+        answerOutput = this.game.add.text(problem.x + 5 /*position to the right of the problem text*/
+            ,420,answer,{font: '32px Arial', fill: '#000'});
     },
 
     
     update: function () {
-		if(walk.isPlaying & playerDirection ===0)
-			{
-<<<<<<< HEAD
+
+        //Make the characters "run"
+		if(walk.isPlaying && playerDirection === 0){
 				bg.x -=3;
 				subbutton.x -=3;
-			}
-		else if(walk.isPlaying & playerDirection ===1){
+        }
+		else if(walk.isPlaying && playerDirection === 1){
 			bg.x +=3;
 			subbutton.x +=3;
-=======
 				bg.x -=2;
 				subbutton.x -=2;
-			}
-		else if(walk.isPlaying & playerDirection ===1){
+        }
+		else if(walk.isPlaying && playerDirection === 1){
 			bg.x +=2;
 			subbutton.x +=2;
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
-			}
-		//Player answered wrong
-		if(!walk.isPlaying & playerDirection ===1 & resetPlayerDirection === 1)
-		{
+        }
+
+        //Reset players to face the ball
+		//if player answered wrong
+		if(!walk.isPlaying & playerDirection ===1 && resetPlayerDirection === 1){
 			player.scale.x *= -1;
 			resetPlayerDirection = 0;
 			playerDirection = 0;
-<<<<<<< HEAD
-=======
-		 	ballAnimationCounter = -1;
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
 		 	subbutton.x -= 1;
 		}
-		//played answered right
-		else if (!walk.isPlaying & resetPlayerDirection ===1){
+		//if played answered right
+		else if (!walk.isPlaying && resetPlayerDirection === 1){
 			opponent.scale.x *= -1;
 			resetPlayerDirection = 0;
-<<<<<<< HEAD
 			subbutton.x += 1;
 		}
-		
-	    var distance = Math.abs(Math.abs(player.x) - Math.abs(opponent.x))/2;
-	    
-		if(!walk.isPlaying & (player.x + distance) > subbutton.x){
-			subbutton.x += 2;
-			
-		}	
-		else if(!walk.isPlaying & (player.x + distance + 1) < subbutton.x){
-			subbutton.x -= 2;
-		}
-			
-=======
-			ballAnimationCounter = 1;
-			subbutton.x += 1;
-		}
-		if (Math.abs(ballAnimationCounter) === 30)
-			ballAnimationCounter = 0;
-		
-		if (ballAnimationCounter != 0){
-			if(ballAnimationCounter > 0){
-				subbutton.x += 2;
-				ballAnimationCounter += 1;
-			}
-			else{
-				subbutton.x -= 1;
-				ballAnimationCounter -= 1;
-			}
-		}
->>>>>>> 19eded62324a9f20d6f3f2768dfaa6692aadc563
-				
 		
 
+
+        //BALL animations
+        //calc distance between both players and roll the ball until it is inbetween both
+        if(winCondition != 10 || winCondition != -10) {
+            var distance = Math.abs(Math.abs(player.x) - Math.abs(opponent.x)) / 2;
+            if (!walk.isPlaying && (player.x + distance) > subbutton.x) {
+                subbutton.x += 2;
+
+            }
+            else if (!walk.isPlaying && (player.x + distance + 1) < subbutton.x) {
+                subbutton.x -= 2;
+            }
+        }
+        else{
+            //player has won
+            if(winCondition === 10) {
+                subbutton.x += 2;
+            }
+            //opponent has won
+            else{
+                subbutton.x -= 2;
+            }
+        }
     },
 
     //default button handler, not used
-    actionOnClicked: function() {
-
-    },
+    actionOnClicked: function() { },
 
     //the primary handler for button clicks
     clicked: function(b) {
@@ -262,47 +241,87 @@ soccer.PlayState.prototype = {
 
     },
 
-
     //helper method to check whether the answer is right or wrong and provide feedback
     checkAnswer: function() {
-		//if answer is right
-        if (num1 + num2 == parseInt(answer))
-		 {
-            validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is right!");
-			resetPlayerDirection = 1;
-			player.animations.play('walk', 60, false);
-			opponent.scale.x *= -1;
-			opponent.animations.play('opponentWalk',60,false);
+
+        //ADDITION
+        if(subtractionMode === 0) {
+            if (num1 + num2 == parseInt(answer)) {
+                validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is right!");
+
+                //check to see if game has been won
+                if(winCondition === 10){
+                    player.animations.play('walk', 60, false);
+                    this.playerHasWon();
+                }
+                else {
+                    resetPlayerDirection = 1;
+                    player.animations.play('walk', 60, false);
+                    opponent.scale.x *= -1;
+                    opponent.animations.play('opponentWalk', 60, false);
+                    winCondition += 1;
+                }
+            }
+
+
+            else {
+                validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
+                player.scale.x *= -1;
+                player.animations.play('walk', 60, false);
+                opponent.animations.play('opponentWalk', 60, false);
+                playerDirection = 1;
+                resetPlayerDirection = 1;
+                winCondition -= 1;
+            }
+
+            //output a new problem to the user
+            answer = "";
+            answerOutput.setText(answer);
+
+            var array = this.randomProblemGenerator(problemLevel);
+            num1 = Math.max(array[0],array[1]);
+            num2 = Math.min(array[0],array[1]);
+            problem.setText(num1 + ' + ' + num2 + ' = ');
         }
+            //SUBTRACTION
+        else if (subtractionMode === 1){
+            if (num1 - num2 == parseInt(answer)) {
+                validate.setText(num1 + " - " + num2 + " = " + parseInt(answer) + " is right!");
+                resetPlayerDirection = 1;
+                player.animations.play('walk', 60, false);
+                opponent.scale.x *= -1;
+                opponent.animations.play('opponentWalk', 60, false);
+                winCondition += 1;
+            }
 
 
-        else {
-			validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
-			player.scale.x *= -1;			
-			player.animations.play('walk', 60, false);
-			opponent.animations.play('opponentWalk',60,false);
-			playerDirection = 1;
-			resetPlayerDirection = 1;
-		    }
+            else {
+                validate.setText(num1 + " - " + num2 + " = " + parseInt(answer) + " is wrong!");
+                player.scale.x *= -1;
+                player.animations.play('walk', 60, false);
+                opponent.animations.play('opponentWalk', 60, false);
+                playerDirection = 1;
+                resetPlayerDirection = 1;
+                winCondition -= 1;
+            }
 
-        //output a new problem to the user
-        answer = "";
-        answerOutput.setText(answer);
+            //output a new problem to the user
+            answer = "";
+            answerOutput.setText(answer);
 
-        var array = this.randomProblemGenerator(1);
-        num1 = array[0];
-        num2 = array[1];
-	    problem.setText(num1 + ' + ' + num2 + ' = ');
+            var array = this.randomProblemGenerator(problemLevel);
+            num1 = Math.max(array[0],array[1]);
+            num2 = Math.min(array[0],array[1]);
+            problem.setText(num1 + ' - ' + num2 + ' = ');
+        }
+    },
+
+    playerHasWon: function (){
+        //called when the player wins the game
     },
 
 
-    /*
-     * Initial random problem generator
-     *
-     * Usage: input 1, 2, or 3
-     *
-     * Calls helper methods.
-     */
+    //Random problem generator
     randomProblemGenerator: function (level){ //level is in int
         var array;
         if (level === 1)
