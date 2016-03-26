@@ -468,7 +468,7 @@ soccer.PlayState.prototype = {
 		return i;
 	else
 		return (i*-1);
-        }
+        
     },
 
 
@@ -480,7 +480,7 @@ soccer.PlayState.prototype = {
 		return initial - i + is;
 	else
 		return intitial + i - is;
-    },
+    }
 
 
 };
