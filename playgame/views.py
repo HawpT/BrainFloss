@@ -17,6 +17,10 @@ def logout_view(request):
 def home(request):
 	return render(request, "home.html")
 
+
+def stats(request):
+	return render(request, "stats.html")
+
 class IndexView(TemplateView):
 	template_name = 'home.html'
 	

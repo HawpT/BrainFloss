@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+#mygame url
 from django.conf.urls import include, url
 from django.contrib import admin
 
@@ -21,7 +22,8 @@ from playgame.forms import LoginForm
 
 urlpatterns = [
     url(r'^playgame/', include('playgame.urls')),
-  
+    url(r'^home/', include('playgame.urls')),
+    url(r'^stats/', include('playgame.urls')),
     
     url(r'^login/$', views.login, {'template_name': 'login.html', 'authentication_form': LoginForm}),
    url(r'^logout/$', views.logout, {'next_page': '/login'}),
