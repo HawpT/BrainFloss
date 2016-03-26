@@ -1,7 +1,7 @@
 #from __future__ import unicode_literals
 
 from django.db import models
-
+from django.conf import settings
 # Create your models here.  models are tables
 
 class Score(models.Model):
@@ -29,7 +29,7 @@ class Level_One(models.Model):
 
 class Level_Two(models.Model):
 	add_score2 = models.IntegerField(blank=True, null=True)
-	sub_score2 = models.IntegerField(blank=True, null=True)
+	#sub_score2 = models.IntegerField(blank=True, null=True)
 	
 	def __str__ (self):
 		return "Add Score:" + self.add_score + "Sub Score:" + sub_score
@@ -51,6 +51,9 @@ class Level_Three(models.Model):
 		return "Level three Subtraction SCORE:" + self.sub_score3
 
 class Student(models.Model):
+	user = models.OneToOneField(settings.AUTH_USER_MODEL) #user object
+	#lev3 = models.OneToManyField(Level_Three) #user.student.lev3 to call
+
 	first_name = models.CharField(max_length = 30)
 	last_name = models.CharField(max_length = 30)
 	student_id = models.IntegerField(blank=True, null=True)

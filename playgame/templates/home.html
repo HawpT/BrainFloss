@@ -8,10 +8,10 @@
 <div class="container">
     <div class="row">
         <div class="jumbotron">
-            <h1>Hello Student</h1>
+            <h1>Hello {{user.student.get_student_fname}}</h1>
             
             <p>You are on your Dashboard....</p>
-          <span style="color:#008000"> <button  type="button" href="/stats target="_blank">View your Stats Here!</button> 
+          <span style="color:#008000"> <a href="/stats" target="_blank"> <button  type="button" >View your Stats Here!</button> </a>
           </span>
             <p>Directions: Choose addition or subtraction and the level desired</p>
             <div>
