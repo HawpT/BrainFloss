@@ -457,17 +457,20 @@ soccer.PlayState.prototype = {
     /*
      *The following functions (2) create a different, more complex variable for var's returned
      */
-     /*
-     *The following functions (2) create a different, more complex variable for var's returned
-     */
-    levelTwoUnique:function(initial) { //initial is int
-        var i = Math.floor(Math.random() * 10); 
+    levelTwoUnique:function(initial) {
+        var i = Math.floor(Math.random() * 10);
+        var sub = initial;
 
-	i = initial - i; //added something to the ones position
-	if (i>=0)	
-		return i;
-	else
-		return (i*-1);
+        //different comparison values between 1 and 10 will yield greater or fewer numbers of subtraction problems
+        if (i >= 5) {
+            while (sub < initial) {
+                sub = sub + i;
+            }
+        }
+        else {
+            sub = sub - i;
+
+            return sub;
         }
     },
 
@@ -475,11 +478,8 @@ soccer.PlayState.prototype = {
     levelThreeUnique:function(initial){
         var i = Math.floor(Math.random()*10)*10; //creates num in tens place
         var is = Math.floor(Math.random()*10); //creates num in ones
-	
-	if ((initial - i)>=0)
-		return initial - i + is;
-	else
-		return intitial + i - is;
+
+        return initial - i - is;
     },
 
 
