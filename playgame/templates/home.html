@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="jumbotron">
-            <h1>Hello {{user.student.get_student_fname}}</h1>
+            <h1>Hello, {{user.student.get_student_fname}}!</h1>
             
             <p>You are on your Dashboard....</p>
           <span style="color:#008000"> <a href="/stats" target="_blank"> <button  type="button" >View your Stats Here!</button> </a>
@@ -22,7 +22,7 @@
                     </pre>
                 <table style="width:100%">
   <tr>
-    <td><a type="button" href="/playgame" class="btn btn-primary btn-lg">Play Addition Level 1</a></td>
+    <td><a type="button" href="/play" class="btn btn-primary btn-lg">Play Addition Level 1</a></td>
     <td><a type="button" href="/playgame" class="btn btn-primary btn-lg">Play Subtraction Level 1</a></td>
     
   </tr>
@@ -49,7 +49,7 @@
         </div>
     </div>
 </div>
-<script src = "{% static 'js/Main.js'%}"></script>
+
 {% endblock %}
 
 
