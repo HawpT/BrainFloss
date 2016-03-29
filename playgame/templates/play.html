@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+
+<head>
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            <h1>Have fun, {{user.student.get_student_fname}}! </h1>
+            <div>
+                
+            </div>
+               <span style="color:#FF3D3D"> <p>Directions:&nbspclick on the ball to begin.  <br>Use the numeric buttons at the top and submit your answer by clicking on the ball.</p>
+                <table style="width:100%">
+  
+  <script src = "{% static 'js/Main.js'%}"></script>
+
+          
+               
+                      
+                        
+                        
+                        
+                      
+               
+              
+               
+
+
+                </span>
+                
+            
+            </body>
+            
+         
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
