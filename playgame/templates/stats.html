@@ -8,18 +8,18 @@
 <div class="container">
     <div class="row">
         <div class="jumbotron">
-            <h1>Hello Student </h1>
+            <h1>Hello, {{user.student.get_student_fname}}!</h1>
             
                <span style="color:#FF3D3D"> <h1>Check Your Stats</h1>
                 <table style="width:100%">
   <tr>
-    <td>Jill</td>
-    <td>Smith</td>
+    <td>Larry</td>
+    <td>Level 1 Addition</td>
     <td>50</td>
   </tr>
   <tr>
-    <td>Eve</td>
-    <td>Jackson</td>
+    <td>Larry</td>
+    <td>Level 2 Addition</td>
     <td>94</td>
   </tr>
 </table> 
@@ -31,9 +31,7 @@
                         
                       
                
-               <pre class="btn btn-default" href="#" role="button"</pre>          Add   <pre class="btn btn-default" href="#" role="button">            Level  One</pre>
-                    </pre>
-                    
+              
                
 
 
@@ -46,7 +44,7 @@
         </div>
     </div>
 </div>
-<script src = "{% static 'js/Main.js'%}"></script>
+
 {% endblock %}
 
 

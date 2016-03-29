@@ -14,6 +14,8 @@ urlpatterns = [
 	url(r'^$', views.home, name='home'),
 	
 	url(r'^stats/$', views.stats, name='stats'),
+	
+	url(r'^play/$', views.play, name='play'),
 	#url(r'^$', views.game, name='base'), #extra
 
 

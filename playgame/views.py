@@ -17,6 +17,9 @@ def logout_view(request):
 def home(request):
 	return render(request, "home.html")
 
+def play(request):
+	return render(request, "play.html")
+
 def stats(request):
 	return render(request, "stats.html")
 

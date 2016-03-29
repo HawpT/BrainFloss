@@ -127,11 +127,12 @@ soccer.PlayState.prototype = {
 				bg.x -=3;
 				subbutton.x -=3;
         }
-		else if(walk.isPlaying && playerDirection === 1){
+		else if(walk.isPlaying && playerDirection === 1){ //when answer wrong
 			bg.x +=3;
 			subbutton.x +=3;
+            //was 2 below
 				bg.x -=2;
-				subbutton.x -=2;
+				subbutton.x -=1;
         }
 		else if(walk.isPlaying && playerDirection === 1){
 			bg.x +=2;
@@ -146,7 +147,7 @@ soccer.PlayState.prototype = {
 			playerDirection = 0;
 		 	subbutton.x -= 1;
 		}
-		//if played answered right
+		//if player answered right
 		else if (!walk.isPlaying && resetPlayerDirection === 1){
 			opponent.scale.x *= -1;
 			resetPlayerDirection = 0;
@@ -239,10 +240,10 @@ soccer.PlayState.prototype = {
 
                 //check to see if game has been won
                 if(winCondition === 10){
-                    player.animations.play('walk', 60, false);
+                    player.animations.play('walk', 60, false); 
                     this.playerHasWon();
                 }
-                else {
+                else { //player correct walk forward
                     resetPlayerDirection = 1;
                     player.animations.play('walk', 60, false);
                     opponent.scale.x *= -1;
@@ -252,7 +253,7 @@ soccer.PlayState.prototype = {
             }
 
 
-            else {
+            else {  //player wrong walk back
                 validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
                 player.scale.x *= -1;
                 player.animations.play('walk', 60, false);
