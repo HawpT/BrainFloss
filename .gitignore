@@ -1,6 +1,11 @@
 #Customs for our project
 .idea
 *.iml
+*.pyc
+*.js~
+*.py~
+*.html~
+
 
 # Windows image file caches
 Thumbs.db
