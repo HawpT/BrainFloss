@@ -8,7 +8,7 @@ var loadPlayState = function (){
     var delbutton, subbutton, button;
     var text = new Text();
     var player, opponent, bg;
-    var anim, walk, playerDirection;
+    var anim, walk, playerDirection,gameplaySpeed;
     var resetPlayerDirection,winCondition,subtractionMode,problemLevel;
 
 soccer.PlayState = function() {};
@@ -21,6 +21,7 @@ soccer.PlayState.prototype = {
         //initial variable declarations
 		playerDirection = 0;
         winCondition = 0;
+		gameplaySpeed = 4;
 
         //set problem level here, 1, 2 or 3
         problemLevel = 1;
@@ -124,19 +125,19 @@ soccer.PlayState.prototype = {
 
         //Make the characters "run"
 		if(walk.isPlaying && playerDirection === 0){
-				bg.x -=3;
-				subbutton.x -=3;
+				bg.x -= gameplaySpeed;
+				subbutton.x -= gameplaySpeed;
         }
 		else if(walk.isPlaying && playerDirection === 1){ //when answer wrong
-			bg.x +=3;
-			subbutton.x +=3;
+			bg.x += gameplaySpeed;
+			subbutton.x += gameplaySpeed;
             //was 2 below
-				bg.x -=2;
-				subbutton.x -=1;
+				bg.x -= gameplaySpeed;
+				subbutton.x -= gameplaySpeed;
         }
 		else if(walk.isPlaying && playerDirection === 1){
-			bg.x +=2;
-			subbutton.x +=2;
+			bg.x += gameplaySpeed;
+			subbutton.x += gameplaySpeed;
         }
 
         //Reset players to face the ball
@@ -161,21 +162,21 @@ soccer.PlayState.prototype = {
         if(winCondition != 10 || winCondition != -10) {
             var distance = Math.abs(Math.abs(player.x) - Math.abs(opponent.x)) / 2;
             if (!walk.isPlaying && (player.x + distance) > subbutton.x) {
-                subbutton.x += 2;
+                subbutton.x +=  gameplaySpeed;
 
             }
             else if (!walk.isPlaying && (player.x + distance + 1) < subbutton.x) {
-                subbutton.x -= 2;
+                subbutton.x -=  gameplaySpeed;
             }
         }
         else{
             //player has won
             if(winCondition === 10) {
-                subbutton.x += 2;
+                subbutton.x +=  gameplaySpeed;
             }
             //opponent has won
             else{
-                subbutton.x -= 2;
+                subbutton.x -=  gameplaySpeed;
             }
         }
     },
