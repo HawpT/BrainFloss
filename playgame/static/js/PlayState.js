@@ -6,7 +6,7 @@ var loadPlayState = function (){
     var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
     var numbuttons;
     var delbutton, subbutton, button;
-    var text = new Text();
+    var text = new Text(), winStateChecker;
     var player, opponent, bg;
     var anim, walk, playerDirection,gameplaySpeed;
     var resetPlayerDirection,winCondition,subtractionMode,problemLevel;
@@ -21,7 +21,7 @@ soccer.PlayState.prototype = {
         //initial variable declarations
 		playerDirection = 0;
         winCondition = 0;
-		gameplaySpeed = 4;
+		gameplaySpeed = 6;
 
         //set problem level here, 1, 2 or 3
         problemLevel = 1;
@@ -35,13 +35,13 @@ soccer.PlayState.prototype = {
        
 	
         //draw the play
-        player =  this.game.add.sprite(278,350,'player',8);
+        player =  this.game.add.sprite(208,350,'player',8);
         player.scale.set(1.2);
 		player.anchor.setTo(.5,.5);
 		walk = player.animations.add('walk');
 
 		//draw the opponent
-		opponent = this.game.add.sprite(522, 350, 'opponent',8);
+		opponent = this.game.add.sprite(592, 350, 'opponent',8);
 		opponent.scale.set(1.2);
 		
 		opponent.anchor.setTo(.5,.5);
@@ -102,15 +102,23 @@ soccer.PlayState.prototype = {
 
         //create the first problem and output it to the screen
         answer = "";
-        var array = this.randomProblemGenerator(1);
+        var array = this.randomProblemGenerator(problemLevel);
         num1 = array[0];
         num2 = array[1];
-        text = num1 + ' + ' + num2 + ' = ';
+
+        if (subtractionMode === 0)
+            text = num1 + ' + ' + num2 + ' = ';
+        else
+            text = num1 + ' - ' + num2 + ' = ';
 
         //output the problem
         problem = this.game.add.text(550, 520, text, {font: '32px Arial', fill: '#000'});
         //set the anchor to the top right corner so it is always placed next to our answer.
         problem.anchor.set(1,0);
+
+        //this is helper text that lets me see whether we are winning or losing
+        winStateChecker = this.game.add.text(470,460,'No Guesses Made',{font: '32px Arial', fill: '#000'});
+
 
         //create a text field for answer validation
         validate = this.game.add.text(400,560,answer, {font: '32px Arial', fill: '#000'});
@@ -129,11 +137,8 @@ soccer.PlayState.prototype = {
 				subbutton.x -= gameplaySpeed;
         }
 		else if(walk.isPlaying && playerDirection === 1){ //when answer wrong
-			bg.x += gameplaySpeed;
-			subbutton.x += gameplaySpeed;
-            //was 2 below
-				bg.x -= gameplaySpeed;
-				subbutton.x -= gameplaySpeed;
+            bg.x += gameplaySpeed;
+            subbutton.x += gameplaySpeed;
         }
 		else if(walk.isPlaying && playerDirection === 1){
 			bg.x += gameplaySpeed;
@@ -146,20 +151,21 @@ soccer.PlayState.prototype = {
 			player.scale.x *= -1;
 			resetPlayerDirection = 0;
 			playerDirection = 0;
-		 	subbutton.x -= 1;
+		 	subbutton.x -= gameplaySpeed;
 		}
 		//if player answered right
 		else if (!walk.isPlaying && resetPlayerDirection === 1){
 			opponent.scale.x *= -1;
 			resetPlayerDirection = 0;
-			subbutton.x += 1;
+			subbutton.x += gameplaySpeed;
 		}
+
 		
 
 
         //BALL animations
         //calc distance between both players and roll the ball until it is inbetween both
-        if(winCondition != 10 || winCondition != -10) {
+        if(winCondition < 9 || winCondition > -9) {
             var distance = Math.abs(Math.abs(player.x) - Math.abs(opponent.x)) / 2;
             if (!walk.isPlaying && (player.x + distance) > subbutton.x) {
                 subbutton.x +=  gameplaySpeed;
@@ -171,7 +177,7 @@ soccer.PlayState.prototype = {
         }
         else{
             //player has won
-            if(winCondition === 10) {
+            if(winCondition >= 9) {
                 subbutton.x +=  gameplaySpeed;
             }
             //opponent has won
@@ -240,8 +246,8 @@ soccer.PlayState.prototype = {
                 validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is right!");
 
                 //check to see if game has been won
-                if(winCondition === 10){
-                    player.animations.play('walk', 60, false); 
+                if(winCondition === 9){
+                    player.animations.play('walk', 60, false);
                     this.playerHasWon();
                 }
                 else { //player correct walk forward
@@ -267,8 +273,9 @@ soccer.PlayState.prototype = {
             //output a new problem to the user
             answer = "";
             answerOutput.setText(answer);
+            winStateChecker.setText('winCondition = ' + winCondition);
 
-            var array = this.randomProblemGenerator(problemLevel);
+            array = this.randomProblemGenerator(problemLevel);
             num1 = Math.max(array[0],array[1]);
             num2 = Math.min(array[0],array[1]);
             problem.setText(num1 + ' + ' + num2 + ' = ');
