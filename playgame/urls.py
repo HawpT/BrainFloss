@@ -16,6 +16,8 @@ urlpatterns = [
 	url(r'^stats/$', views.stats, name='stats'),
 	
 	url(r'^play/$', views.play, name='play'),
+	url(r'^teacherdash/$', views.teacherdash, name='teacherdash'),
+	url(r'^teacherstats/$', views.teacherstats, name='teacherstats'),
 	#url(r'^$', views.game, name='base'), #extra
 
 

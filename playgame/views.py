@@ -23,6 +23,14 @@ def play(request):
 def stats(request):
 	return render(request, "stats.html")
 
+@login_required(login_url="login/")
+def teacherdash(request):
+	return render(request, "teacherdash.html")
+
+@login_required(login_url="login/")
+def teacherstats(request):
+	return render(request, "teacherstats.html")
+
 class IndexView(TemplateView):
 	template_name = 'home.html'
 	
