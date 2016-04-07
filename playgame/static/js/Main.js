@@ -17,6 +17,7 @@ loadPlayState();
 soccer.game.state.add('Preload', soccer.Preload);
 soccer.game.state.add('MainMenu', soccer.Menu);
 soccer.game.state.add('PlayState', soccer.PlayState);
+soccer.game.state.add('Teaching',soccer.Teaching);
 
 soccer.game.state.start('Preload');
 

@@ -1,15 +1,16 @@
 var soccer = soccer || {};
+var operand1, operand2, subtractionMode;
 
 var loadPlayState = function (){
 
     var answerOutput, validate, problem, answer;
     var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
-    var numbuttons;
+    var numbuttons, teachingButton;
     var delbutton, subbutton, button;
     var text = new Text(), winStateChecker;
     var player, opponent, bg;
     var anim, walk, playerDirection,gameplaySpeed;
-    var resetPlayerDirection,winCondition,subtractionMode,problemLevel;
+    var resetPlayerDirection,winCondition,problemLevel;
 
 soccer.PlayState = function() {};
 
@@ -50,18 +51,19 @@ soccer.PlayState.prototype = {
 	
 
         //add the number input buttons to the screen
-        onebutton = new LabelButton(soccer.game,30,30,'numbutton','1',this.actionOnClicked,this,0,0,0,0);
-        twobutton = new LabelButton(soccer.game,90,30,'numbutton','2',this.actionOnClicked,this,0,0,0,0);
-        threebutton = new LabelButton(soccer.game,150,30,'numbutton','3',this.actionOnClicked,this,0,0,0,0);
-        fourbutton = new LabelButton(soccer.game,210,30,'numbutton','4',this.actionOnClicked,this,0,0,0,0);
-        fivebutton = new LabelButton(soccer.game,270,30,'numbutton','5',this.actionOnClicked,this,0,0,0,0);
-        sixbutton = new LabelButton(soccer.game,330,30,'numbutton','6',this.actionOnClicked,this,0,0,0,0);
-        sevenbutton = new LabelButton(soccer.game,390,30,'numbutton','7',this.actionOnClicked,this,0,0,0,0);
-        eightbutton = new LabelButton(soccer.game,450,30,'numbutton','8',this.actionOnClicked,this,0,0,0,0);
-        ninebutton = new LabelButton(soccer.game,510,30,'numbutton','9',this.actionOnClicked,this,0,0,0,0);
-        zerobutton = new LabelButton(soccer.game,570,30,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
-        delbutton = new LabelButton(soccer.game,630,30,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
+        onebutton = new LabelButton(soccer.game,30,570,'numbutton','1',this.actionOnClicked,this,0,0,0,0);
+        twobutton = new LabelButton(soccer.game,90,570,'numbutton','2',this.actionOnClicked,this,0,0,0,0);
+        threebutton = new LabelButton(soccer.game,150,570,'numbutton','3',this.actionOnClicked,this,0,0,0,0);
+        fourbutton = new LabelButton(soccer.game,210,570,'numbutton','4',this.actionOnClicked,this,0,0,0,0);
+        fivebutton = new LabelButton(soccer.game,270,570,'numbutton','5',this.actionOnClicked,this,0,0,0,0);
+        sixbutton = new LabelButton(soccer.game,330,570,'numbutton','6',this.actionOnClicked,this,0,0,0,0);
+        sevenbutton = new LabelButton(soccer.game,390,570,'numbutton','7',this.actionOnClicked,this,0,0,0,0);
+        eightbutton = new LabelButton(soccer.game,450,570,'numbutton','8',this.actionOnClicked,this,0,0,0,0);
+        ninebutton = new LabelButton(soccer.game,510,570,'numbutton','9',this.actionOnClicked,this,0,0,0,0);
+        zerobutton = new LabelButton(soccer.game,570,570,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
+        delbutton = new LabelButton(soccer.game,630,570,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
         subbutton = new LabelButton(soccer.game,400,400,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
+        teachingButton = new LabelButton(soccer.game,0,300,'numbutton','TEACH ME',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
         subbutton.anchor.set(0.5,0.5);
@@ -99,17 +101,19 @@ soccer.PlayState.prototype = {
         zerobutton.onInputUp.add(this.clicked.bind(this, zerobutton),this);
         delbutton.onInputUp.add(this.clicked.bind(this, delbutton),this);
 
+        teachingButton.onInputUp.add(this.teachingScreen.bind(this));
+
 
         //create the first problem and output it to the screen
         answer = "";
         var array = this.randomProblemGenerator(problemLevel);
-        num1 = array[0];
-        num2 = array[1];
+        operand1 = array[0];
+        operand2 = array[1];
 
         if (subtractionMode === 0)
-            text = num1 + ' + ' + num2 + ' = ';
+            text = operand1 + ' + ' + operand2 + ' = ';
         else
-            text = num1 + ' - ' + num2 + ' = ';
+            text = operand1 + ' - ' + operand2 + ' = ';
 
         //output the problem
         problem = this.game.add.text(550, 520, text, {font: '32px Arial', fill: '#000'});
@@ -190,6 +194,11 @@ soccer.PlayState.prototype = {
     //default button handler, not used
     actionOnClicked: function() { },
 
+    teachingScreen: function() {
+        validate.setText('Switching to Teaching');
+        this.game.state.start('Teaching');
+    },
+
     //the primary handler for button clicks
     clicked: function(b) {
 
@@ -242,8 +251,8 @@ soccer.PlayState.prototype = {
 
         //ADDITION
         if(subtractionMode === 0) {
-            if (num1 + num2 == parseInt(answer)) {
-                validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is right!");
+            if (operand1 + operand2 == parseInt(answer)) {
+                validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is right!");
 
                 //check to see if game has been won
                 if(winCondition === 9){
@@ -261,7 +270,7 @@ soccer.PlayState.prototype = {
 
 
             else {  //player wrong walk back
-                validate.setText(num1 + " + " + num2 + " = " + parseInt(answer) + " is wrong!");
+                validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is wrong!");
                 player.scale.x *= -1;
                 player.animations.play('walk', 60, false);
                 opponent.animations.play('opponentWalk', 60, false);
@@ -276,14 +285,14 @@ soccer.PlayState.prototype = {
             winStateChecker.setText('winCondition = ' + winCondition);
 
             array = this.randomProblemGenerator(problemLevel);
-            num1 = Math.max(array[0],array[1]);
-            num2 = Math.min(array[0],array[1]);
-            problem.setText(num1 + ' + ' + num2 + ' = ');
+            operand1 = Math.max(array[0],array[1]);
+            operand2 = Math.min(array[0],array[1]);
+            problem.setText(operand1 + ' + ' + operand2 + ' = ');
         }
             //SUBTRACTION
         else if (subtractionMode === 1){
-            if (num1 - num2 == parseInt(answer)) {
-                validate.setText(num1 + " - " + num2 + " = " + parseInt(answer) + " is right!");
+            if (operand1 - operand2 == parseInt(answer)) {
+                validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is right!");
                 resetPlayerDirection = 1;
                 player.animations.play('walk', 60, false);
                 opponent.scale.x *= -1;
@@ -293,7 +302,7 @@ soccer.PlayState.prototype = {
 
 
             else {
-                validate.setText(num1 + " - " + num2 + " = " + parseInt(answer) + " is wrong!");
+                validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is wrong!");
                 player.scale.x *= -1;
                 player.animations.play('walk', 60, false);
                 opponent.animations.play('opponentWalk', 60, false);
@@ -307,9 +316,9 @@ soccer.PlayState.prototype = {
             answerOutput.setText(answer);
 
             var array = this.randomProblemGenerator(problemLevel);
-            num1 = Math.max(array[0],array[1]);
-            num2 = Math.min(array[0],array[1]);
-            problem.setText(num1 + ' - ' + num2 + ' = ');
+            operand1 = Math.max(array[0],array[1]);
+            operand2 = Math.min(array[0],array[1]);
+            problem.setText(operand1 + ' - ' + operand2 + ' = ');
         }
     },
 
@@ -332,7 +341,7 @@ soccer.PlayState.prototype = {
             array = [0,0];
         }
 
-        //return the two operands as an array [num1,num2]
+        //return the two operands as an array [operand1,operand2]
         return array;
     },
 
