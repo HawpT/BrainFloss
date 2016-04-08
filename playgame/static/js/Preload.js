@@ -14,6 +14,7 @@ soccer.Preload.prototype = {
         this.load.spritesheet('opponent','../static/playgame/opponent-walk.png',105,170,27);
         this.load.image('numbutton','../static/playgame/orangebutton.png');
         this.load.image('playfield','../static/playgame/playfield.png');
+        this.load.image('goal','../static/playgame/goals.png');
     },
 
     //immediately when preload is done

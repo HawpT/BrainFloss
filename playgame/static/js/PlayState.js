@@ -8,8 +8,8 @@ var loadPlayState = function (){
     var numbuttons, teachingButton;
     var delbutton, subbutton, button;
     var text = new Text(), winStateChecker;
-    var player, opponent, bg;
-    var anim, walk, playerDirection,gameplaySpeed;
+    var player, opponent, bg, goal1, goal2;
+    var anim, walk,opponentWalk, playerDirection,gameplaySpeed,ballRotationSpeed;
     var resetPlayerDirection,winCondition,problemLevel;
 
 soccer.PlayState = function() {};
@@ -23,6 +23,7 @@ soccer.PlayState.prototype = {
 		playerDirection = 0;
         winCondition = 0;
 		gameplaySpeed = 6;
+        ballRotationSpeed = 7;
 
         //set problem level here, 1, 2 or 3
         problemLevel = 1;
@@ -47,7 +48,7 @@ soccer.PlayState.prototype = {
 		
 		opponent.anchor.setTo(.5,.5);
 		opponent.scale.x *= -1;
-		var opponentWalk = opponent.animations.add('opponentWalk');
+		opponentWalk = opponent.animations.add('opponentWalk');
 	
 
         //add the number input buttons to the screen
@@ -63,6 +64,7 @@ soccer.PlayState.prototype = {
         zerobutton = new LabelButton(soccer.game,570,570,'numbutton','0',this.actionOnClicked,this,0,0,0,0);
         delbutton = new LabelButton(soccer.game,630,570,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
         subbutton = new LabelButton(soccer.game,400,400,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
+
         teachingButton = new LabelButton(soccer.game,0,300,'numbutton','TEACH ME',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
@@ -116,77 +118,107 @@ soccer.PlayState.prototype = {
             text = operand1 + ' - ' + operand2 + ' = ';
 
         //output the problem
-        problem = this.game.add.text(550, 520, text, {font: '32px Arial', fill: '#000'});
+        problem = this.game.add.text(400, subbutton.y - 80, text, {font: '32px Arial', fill: '#000'});
         //set the anchor to the top right corner so it is always placed next to our answer.
         problem.anchor.set(1,0);
 
         //this is helper text that lets me see whether we are winning or losing
-        winStateChecker = this.game.add.text(470,460,'No Guesses Made',{font: '32px Arial', fill: '#000'});
+        //winStateChecker = this.game.add.text(470,460,'No Guesses Made',{font: '32px Arial', fill: '#000'});
 
 
         //create a text field for answer validation
-        validate = this.game.add.text(400,560,answer, {font: '32px Arial', fill: '#000'});
+        validate = this.game.add.text(400,500,answer, {font: '32px Arial', fill: '#000'});
 
         //output the students answer
         answerOutput = this.game.add.text(problem.x + 5 /*position to the right of the problem text*/
             ,problem.y,answer,{font: '32px Arial', fill: '#000'});
+
+        goal1 = new LabelButton(soccer.game,2200,350,'goal',"",this.actionOnClicked,this,0,0,0,0);
+        goal2 = new LabelButton(soccer.game,-1400,350,'goal',"",this.actionOnClicked,this,0,0,0,0);
+        goal1.anchor.set(0.5);
+        goal2.anchor.set(0.5);
+
+        goal2.scale.x *= -1;
+
+
+
     },
 
     
     update: function () {
 
         //Make the characters "run"
-		if(walk.isPlaying && playerDirection === 0){
-				bg.x -= gameplaySpeed;
-				subbutton.x -= gameplaySpeed;
-        }
-		else if(walk.isPlaying && playerDirection === 1){ //when answer wrong
-            bg.x += gameplaySpeed;
-            subbutton.x += gameplaySpeed;
-        }
-		else if(walk.isPlaying && playerDirection === 1){
-			bg.x += gameplaySpeed;
-			subbutton.x += gameplaySpeed;
-        }
+        if(winCondition <= 9 && winCondition >= -9) {
+            if (walk.isPlaying && playerDirection === 0) {
+                bg.x -= gameplaySpeed;
+                subbutton.x -= gameplaySpeed;
+                goal1.x -= gameplaySpeed;
+                goal2.x -= gameplaySpeed;
+            }
+            else if (walk.isPlaying && playerDirection === 1) { //when answer wrong
+                bg.x += gameplaySpeed;
+                subbutton.x += gameplaySpeed;
+                goal1.x += gameplaySpeed;
+                goal2.x += gameplaySpeed;
+            }
+            else if (walk.isPlaying && playerDirection === 1) {
+                bg.x += gameplaySpeed;
+                subbutton.x += gameplaySpeed;
+                goal1.x += gameplaySpeed;
+                goal2.x += gameplaySpeed;
+            }
 
-        //Reset players to face the ball
-		//if player answered wrong
-		if(!walk.isPlaying & playerDirection ===1 && resetPlayerDirection === 1){
-			player.scale.x *= -1;
-			resetPlayerDirection = 0;
-			playerDirection = 0;
-		 	subbutton.x -= gameplaySpeed;
-		}
-		//if player answered right
-		else if (!walk.isPlaying && resetPlayerDirection === 1){
-			opponent.scale.x *= -1;
-			resetPlayerDirection = 0;
-			subbutton.x += gameplaySpeed;
-		}
-
-		
-
-
-        //BALL animations
-        //calc distance between both players and roll the ball until it is inbetween both
-        if(winCondition < 9 || winCondition > -9) {
-            var distance = Math.abs(Math.abs(player.x) - Math.abs(opponent.x)) / 2;
-            if (!walk.isPlaying && (player.x + distance) > subbutton.x) {
-                subbutton.x +=  gameplaySpeed;
+            //Reset players to face the ball
+            //if player answered wrong
+            if (!walk.isPlaying & playerDirection === 1 && resetPlayerDirection === 1) {
+                player.scale.x *= -1;
+                resetPlayerDirection = 0;
+                playerDirection = 0;
+                subbutton.x -= gameplaySpeed;
+            }
+            //if player answered right
+            else if (!walk.isPlaying && resetPlayerDirection === 1) {
+                opponent.scale.x *= -1;
+                resetPlayerDirection = 0;
+                subbutton.x += gameplaySpeed;
 
             }
+
+
+            //BALL animations
+            //calc distance between both players and roll the ball until it is inbetween both
+            var distance = Math.abs(Math.abs(player.x) - Math.abs(opponent.x)) / 2;
+            if (!walk.isPlaying && (player.x + distance) > subbutton.x) {
+                subbutton.x += gameplaySpeed;
+                subbutton.angle += ballRotationSpeed;
+            }
             else if (!walk.isPlaying && (player.x + distance + 1) < subbutton.x) {
-                subbutton.x -=  gameplaySpeed;
+                subbutton.x -= gameplaySpeed;
+                subbutton.angle -= ballRotationSpeed;
             }
         }
         else{
             //player has won
-            if(winCondition >= 9) {
-                subbutton.x +=  gameplaySpeed;
+            if(winCondition > 9) {
+                if ( walk.isPlaying){
+                    player.x += gameplaySpeed;
+                    opponent.x -= gameplaySpeed;
+                }
+                else if (subbutton.x < 690) {
+                    subbutton.x += gameplaySpeed;
+                    subbutton.angle -= ballRotationSpeed;
+                }
             }
             //opponent has won
-            else{
-                subbutton.x -=  gameplaySpeed;
+            else {
+                if ( opponentWalk.isPlaying){
+                    opponent.x -= gameplaySpeed;
+                    player.x += gameplaySpeed;
+                }
+                else if (subbutton.x > 90) {
+                    subbutton.x -= gameplaySpeed;
+                    subbutton.angle += ballRotationSpeed;
+                }
             }
         }
     },
@@ -197,6 +229,10 @@ soccer.PlayState.prototype = {
     teachingScreen: function() {
         validate.setText('Switching to Teaching');
         this.game.state.start('Teaching');
+    },
+
+    restartPlayState: function(){
+        this.game.state.start('PlayState');
     },
 
     //the primary handler for button clicks
@@ -250,13 +286,15 @@ soccer.PlayState.prototype = {
     checkAnswer: function() {
 
         //ADDITION
-        if(subtractionMode === 0) {
+        if(subtractionMode === 0 && winCondition < 10 && winCondition > -10) {
             if (operand1 + operand2 == parseInt(answer)) {
                 validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is right!");
 
                 //check to see if game has been won
-                if(winCondition === 9){
+                if(winCondition >= 9){
+                    winCondition++;
                     player.animations.play('walk', 60, false);
+                    opponent.animations.play('opponentWalk', 60, false);
                     this.playerHasWon();
                 }
                 else { //player correct walk forward
@@ -271,18 +309,26 @@ soccer.PlayState.prototype = {
 
             else {  //player wrong walk back
                 validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is wrong!");
-                player.scale.x *= -1;
-                player.animations.play('walk', 60, false);
-                opponent.animations.play('opponentWalk', 60, false);
-                playerDirection = 1;
-                resetPlayerDirection = 1;
-                winCondition -= 1;
+                if(winCondition <= -9){
+                    winCondition--;
+                    opponent.animations.play('opponentWalk', 60, false);
+                    player.animations.play('walk', 60, false);
+                    this.opponentHasWon();
+                }
+                else {
+                    player.scale.x *= -1;
+                    player.animations.play('walk', 60, false);
+                    opponent.animations.play('opponentWalk', 60, false);
+                    playerDirection = 1;
+                    resetPlayerDirection = 1;
+                    winCondition -= 1;
+                }
             }
 
             //output a new problem to the user
             answer = "";
             answerOutput.setText(answer);
-            winStateChecker.setText('winCondition = ' + winCondition);
+            //winStateChecker.setText('winCondition = ' + winCondition);
 
             array = this.randomProblemGenerator(problemLevel);
             operand1 = Math.max(array[0],array[1]);
@@ -290,7 +336,7 @@ soccer.PlayState.prototype = {
             problem.setText(operand1 + ' + ' + operand2 + ' = ');
         }
             //SUBTRACTION
-        else if (subtractionMode === 1){
+        else if (subtractionMode === 1 && winCondition < 10 && winCondition > -10){
             if (operand1 - operand2 == parseInt(answer)) {
                 validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is right!");
                 resetPlayerDirection = 1;
@@ -298,6 +344,7 @@ soccer.PlayState.prototype = {
                 opponent.scale.x *= -1;
                 opponent.animations.play('opponentWalk', 60, false);
                 winCondition += 1;
+                this.playerHasWon();
             }
 
 
@@ -309,6 +356,7 @@ soccer.PlayState.prototype = {
                 playerDirection = 1;
                 resetPlayerDirection = 1;
                 winCondition -= 1;
+                this.opponentHasWon();
             }
 
             //output a new problem to the user
@@ -323,7 +371,22 @@ soccer.PlayState.prototype = {
     },
 
     playerHasWon: function (){
-        //called when the player wins the game
+        var restart = new LabelButton(soccer.game,400,250,'numbutton','',this.actionOnClicked,this,0,0,0,0);
+        restart.onInputUp.add(this.restartPlayState.bind(this));
+        restart.anchor.set(0.5);
+        restart.scale.x = 6;
+        var playAgainText = this.game.add.text(restart.x,restart.y, 'You won! Play again?', {font: '32px Arial', fill: '#000'});
+        playAgainText.anchor.set(0.5);
+
+    },
+
+    opponentHasWon: function(){
+        var restart = new LabelButton(soccer.game,400,250,'numbutton','',this.actionOnClicked,this,0,0,0,0);
+        restart.onInputUp.add(this.restartPlayState.bind(this));
+        restart.anchor.set(0.5);
+        restart.scale.x = 6;
+        var playAgainText = this.game.add.text(restart.x,restart.y, 'You lost! Play again?', {font: '32px Arial', fill: '#000'});
+        playAgainText.anchor.set(0.5);
     },
 
 
