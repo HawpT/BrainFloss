@@ -15,6 +15,8 @@ soccer.Preload.prototype = {
         this.load.image('numbutton','../static/playgame/orangebutton.png');
         this.load.image('playfield','../static/playgame/playfield.png');
         this.load.image('goal','../static/playgame/goals.png');
+        this.load.image('lgbutton','../static/playgame/largebutton.png');
+        this.load.image('xball','../static/playgame/xball1.png');
     },
 
     //immediately when preload is done

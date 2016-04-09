@@ -65,7 +65,7 @@ soccer.PlayState.prototype = {
         delbutton = new LabelButton(soccer.game,630,570,'numbutton','Del',this.actionOnClicked,this,0,0,0,0);
         subbutton = new LabelButton(soccer.game,400,400,'ball','SUBMIT',this.actionOnClicked,this,0,0,0,0);
 
-        teachingButton = new LabelButton(soccer.game,0,300,'numbutton','TEACH ME',this.actionOnClicked,this,0,0,0,0);
+        teachingButton = new LabelButton(soccer.game,85,50,'lgbutton','TEACH ME',this.actionOnClicked,this,0,0,0,0);
 
         //The submit button
         subbutton.anchor.set(0.5,0.5);
