@@ -25,11 +25,22 @@ soccer.PlayState.prototype = {
 		gameplaySpeed = 6;
         ballRotationSpeed = 7;
 
-        //set problem level here, 1, 2 or 3
-        problemLevel = 1;
+	//set problem level here, 1, 2, 3 or 4
+		var parameters = window.location.search.substring(1).split('&');
+		var sPageURL = parameters[0].split('=');
 
+		var levelSign = parseInt(sPageURL[1]);
+			//console.log(levelSign);
+
+		problemLevel = levelSign;
+
+		var playTypePair = parameters[1].split('=');
+			//console.log(playTypePair);
+		console.log(playTypePair[1]);
+	
+		var questionType = parseInt(playTypePair);
         //set subtraction mode to 1 for subtraction problems, 2 for addition
-        subtractionMode = 0;
+        	subtractionMode = questionType;
 
         //draw the background image
         bg = this.game.add.image(-1575,0,'playfield');
@@ -399,6 +410,8 @@ soccer.PlayState.prototype = {
             array = this.levelTwo();
         else if(level === 3)
             array = this.levelThree();
+	else if(level ===4)
+		array = this.levelFour();
         else{
             //debugging case, 0,0 will be a flag for something going wrong
             array = [0,0];
@@ -435,7 +448,10 @@ soccer.PlayState.prototype = {
             n = n%10;
 
 
-        return [r, n];
+        if (r>n)
+		return [r, n];
+	else	
+		return [n, r];
 
     }, // closes levelOne function
 
@@ -484,7 +500,10 @@ soccer.PlayState.prototype = {
         }
         var rinal = this.levelTwoUnique(r);
 
-        return [rinal, final];
+        if (rinal>final)
+		return [rinal, final];
+	else	
+		return [final,rinal];;
     }, //closes levelTwo function
 
 
@@ -532,8 +551,63 @@ soccer.PlayState.prototype = {
             final = this.levelThreeUnique(n);
         }
         var rinal = this.levelThreeUnique(r);
-        return [rinal, final];
+        if (rinal>final)
+		return [rinal, final];
+	else	
+		return [final,rinal];
     },// closes levelThree
+
+
+		    //helper method for level 4
+		    levelFour:function(){
+			var r = Math.floor(Math.random()*10);// it will round down
+			r = r*1000;
+			var n = Math.floor(Math.random()*10);
+			var final;
+			if(r === 9000){
+			    n = (n%2)*1000;
+			    final = this.levelFourUnique(n);
+			}
+			else if(r === 8000){
+			    n = (n%3)*100;
+			    final = this.levelFourUnique(n);
+			}
+			else if(r === 7000){
+			    n = (n%4)*100;
+			    final = this.levelFourUnique(n);
+			}
+			else if(r === 6000){
+			    n = (n%5)*100;
+			    final = this.levelFourUnique(n);
+			}
+			else if(r === 5000){
+			    n = (n%6)*100;
+			    final = this.levelFourUnique(n);
+			}
+			else if(r === 3000){
+			    n = (n%8)*100;
+			    final =this.levelFourUnique(n);
+			}
+			else if(r === 2000){
+			    n = (n%9)*100;
+			    final = this.levelFourUnique(n);
+			}
+			else if(r === 1000){
+			    n = (n%10)*100;
+			    final = this.levelFourUnique(n);
+
+			}
+			else {
+			    n = n*100;
+			    final = this.levelFourUnique(n);
+			}
+			var rinal = this.levelFourUnique(r);
+		
+			if (rinal>final)
+				return [rinal, final];
+			else	
+				return [final,rinal];
+		    },// closes levelFour
 
     /*
      *The following functions (2) create a different, more complex variable for var's returned
@@ -561,9 +635,19 @@ soccer.PlayState.prototype = {
 		return initial - i + is;
 	else
 		return intitial + i - is;
-    }
+    },
 
-
+	levelFourUnique:function(initial){
+			var i = Math.floor(Math.random()*10)*10; //creates num in 10's place
+			var is = Math.floor(Math.random()*10); //creates num in 1's
+			var it = Math.floor(Math.random()*10)*100; //creates num in 100's place
+	
+			if ((initial - it)>=0)
+				return initial - it + i + is;
+			else
+				return initial + it - i - is;	
+	
+		}
 };
 };
 
