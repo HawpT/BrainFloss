@@ -29,15 +29,16 @@ soccer.PlayState.prototype = {
 	//set problem level here, 1, 2, 3 or 4
 		var parameters = window.location.search.substring(1).split('&');
 		var sPageURL = parameters[0].split('=');
+        //console.log(sPageURL);
 
 		problemLevel = parseInt(sPageURL[1]);
         //console.log(problemLevel);
 
 		playTypePair = parameters[1].split('='); //error
-        //console.log(playTypePair);
+        //console.log(playTypePair[0]);
 		//console.log(playTypePair[1]);
 	
-		questionType = parseInt(playTypePair);
+		questionType = parseInt(playTypePair[1]);
         //set subtraction mode to 1 for subtraction problems, 2 for addition
 
         //draw the background image
@@ -120,6 +121,7 @@ soccer.PlayState.prototype = {
         var array = this.randomProblemGenerator(problemLevel);
         operand1 = array[0];
         operand2 = array[1];
+        console.log(questionType);
 
         if (questionType === 0)
             text = operand1 + ' + ' + operand2 + ' = ';
@@ -297,10 +299,9 @@ soccer.PlayState.prototype = {
     checkAnswer: function() {
         //Prevent user from answering if game has been won
         if (winCondition < 10 && winCondition > -10) {
-
             //ADDITION
             if (questionType === 0) {
-                if (operand1 + operand2 == parseInt(answer)) {
+                if (operand1 + operand2 === parseInt(answer)) {
                     validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is right!");
 
                     //check to see if game has been won
@@ -326,17 +327,14 @@ soccer.PlayState.prototype = {
 
             //SUBTRACTION
             else if (questionType === 1) {
-                Debug.log("Entering submode");
-                if (operand1 - operand2 == parseInt(answer)) {
+                if (operand1 - operand2 === parseInt(answer)) {
                     validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is right!");
-                    Debug.log("Question answered correctly.");
                     this.questionAnsweredRight();
                 }
 
 
                 else {
                     validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is wrong!");
-                    Debug.log("Question answered incorrectly");
                     this.questionAnsweredWrong();
                 }
 
@@ -378,17 +376,18 @@ soccer.PlayState.prototype = {
     questionAnsweredWrong: function (){
         //opponent has won the game
         if (winCondition <= -9) {
-            winCondition++;
+            winCondition--;
             player.animations.play('walk', 60, false);
             opponent.animations.play('opponentWalk', 60, false);
             this.opponentHasWon();
         }
         else { //player incorrect, walk back
             resetPlayerDirection = 1;
+            playerDirection = 1;
+            player.scale.x *= -1;
             player.animations.play('walk', 60, false);
-            opponent.scale.x *= -1;
             opponent.animations.play('opponentWalk', 60, false);
-            winCondition += 1;
+            winCondition -= 1;
         }
     },
 
