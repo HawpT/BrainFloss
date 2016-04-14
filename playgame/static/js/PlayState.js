@@ -1,5 +1,6 @@
 var soccer = soccer || {};
-var operand1, operand2, subtractionMode;
+
+var operand1, operand2, questionType, playTypePair, questionType;
 
 var loadPlayState = function (){
 
@@ -29,18 +30,15 @@ soccer.PlayState.prototype = {
 		var parameters = window.location.search.substring(1).split('&');
 		var sPageURL = parameters[0].split('=');
 
-		var levelSign = parseInt(sPageURL[1]);
-			//console.log(levelSign);
+		problemLevel = parseInt(sPageURL[1]);
+        //console.log(problemLevel);
 
-		problemLevel = levelSign;
-
-		var playTypePair = parameters[1].split('='); //error
-			//console.log(playTypePair);
+		playTypePair = parameters[1].split('='); //error
+        //console.log(playTypePair);
 		//console.log(playTypePair[1]);
 	
-		var questionType = parseInt(playTypePair);
+		questionType = parseInt(playTypePair);
         //set subtraction mode to 1 for subtraction problems, 2 for addition
-        	subtractionMode = questionType;
 
         //draw the background image
         bg = this.game.add.image(-1575,0,'playfield');
@@ -123,10 +121,12 @@ soccer.PlayState.prototype = {
         operand1 = array[0];
         operand2 = array[1];
 
-        if (subtractionMode === 0)
+        if (questionType === 0)
             text = operand1 + ' + ' + operand2 + ' = ';
-        else
+        else if (questionType === 1)
             text = operand1 + ' - ' + operand2 + ' = ';
+        else if (questionType === 2)
+            text = "stub for 1's 10's 100's";
 
         //output the problem
         problem = this.game.add.text(400, subbutton.y - 80, text, {font: '32px Arial', fill: '#000'});
@@ -295,89 +295,100 @@ soccer.PlayState.prototype = {
 
     //helper method to check whether the answer is right or wrong and provide feedback
     checkAnswer: function() {
+        //Prevent user from answering if game has been won
+        if (winCondition < 10 && winCondition > -10) {
 
-        //ADDITION
-        if(subtractionMode === 0 && winCondition < 10 && winCondition > -10) {
-            if (operand1 + operand2 == parseInt(answer)) {
-                validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is right!");
+            //ADDITION
+            if (questionType === 0) {
+                if (operand1 + operand2 == parseInt(answer)) {
+                    validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is right!");
 
-                //check to see if game has been won
-                if(winCondition >= 9){
-                    winCondition++;
-                    player.animations.play('walk', 60, false);
-                    opponent.animations.play('opponentWalk', 60, false);
-                    this.playerHasWon();
+                    //check to see if game has been won
+                    this.questionAnsweredRight();
                 }
-                else { //player correct walk forward
-                    resetPlayerDirection = 1;
-                    player.animations.play('walk', 60, false);
-                    opponent.scale.x *= -1;
-                    opponent.animations.play('opponentWalk', 60, false);
-                    winCondition += 1;
+
+
+                else {  //player wrong walk back
+                    validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is wrong!");
+                    this.questionAnsweredWrong();
                 }
+
+                //output a new problem to the user
+                answer = "";
+                answerOutput.setText(answer);
+                //winStateChecker.setText('winCondition = ' + winCondition);
+
+                array = this.randomProblemGenerator(problemLevel);
+                operand1 = Math.max(array[0], array[1]);
+                operand2 = Math.min(array[0], array[1]);
+                problem.setText(operand1 + ' + ' + operand2 + ' = ');
             }
 
-
-            else {  //player wrong walk back
-                validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is wrong!");
-                if(winCondition <= -9){
-                    winCondition--;
-                    opponent.animations.play('opponentWalk', 60, false);
-                    player.animations.play('walk', 60, false);
-                    this.opponentHasWon();
-                }
-                else {
-                    player.scale.x *= -1;
-                    player.animations.play('walk', 60, false);
-                    opponent.animations.play('opponentWalk', 60, false);
-                    playerDirection = 1;
-                    resetPlayerDirection = 1;
-                    winCondition -= 1;
-                }
-            }
-
-            //output a new problem to the user
-            answer = "";
-            answerOutput.setText(answer);
-            //winStateChecker.setText('winCondition = ' + winCondition);
-
-            array = this.randomProblemGenerator(problemLevel);
-            operand1 = Math.max(array[0],array[1]);
-            operand2 = Math.min(array[0],array[1]);
-            problem.setText(operand1 + ' + ' + operand2 + ' = ');
-        }
             //SUBTRACTION
-        else if (subtractionMode === 1 && winCondition < 10 && winCondition > -10){
-            if (operand1 - operand2 == parseInt(answer)) {
-                validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is right!");
-                resetPlayerDirection = 1;
-                player.animations.play('walk', 60, false);
-                opponent.scale.x *= -1;
-                opponent.animations.play('opponentWalk', 60, false);
-                winCondition += 1;
-                this.playerHasWon();
+            else if (questionType === 1) {
+                Debug.log("Entering submode");
+                if (operand1 - operand2 == parseInt(answer)) {
+                    validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is right!");
+                    Debug.log("Question answered correctly.");
+                    this.questionAnsweredRight();
+                }
+
+
+                else {
+                    validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is wrong!");
+                    Debug.log("Question answered incorrectly");
+                    this.questionAnsweredWrong();
+                }
+
+                //output a new problem to the user
+                answer = "";
+                answerOutput.setText(answer);
+
+                var array = this.randomProblemGenerator(problemLevel);
+                operand1 = Math.max(array[0], array[1]);
+                operand2 = Math.min(array[0], array[1]);
+                problem.setText(operand1 + ' - ' + operand2 + ' = ');
             }
 
+            //1's 10's 100's game type
+            else if (questionType === 2){
 
-            else {
-                validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is wrong!");
-                player.scale.x *= -1;
-                player.animations.play('walk', 60, false);
-                opponent.animations.play('opponentWalk', 60, false);
-                playerDirection = 1;
-                resetPlayerDirection = 1;
-                winCondition -= 1;
-                this.opponentHasWon();
             }
+        }
+    },
 
-            //output a new problem to the user
-            answer = "";
-            answerOutput.setText(answer);
+    //control the animations for a correctly answered question
+    questionAnsweredRight: function (){
+        //player has won the game
+        if (winCondition >= 9) {
+            winCondition++;
+            player.animations.play('walk', 60, false);
+            opponent.animations.play('opponentWalk', 60, false);
+            this.playerHasWon();
+        }
+        else { //player correct walk forward
+            resetPlayerDirection = 1;
+            player.animations.play('walk', 60, false);
+            opponent.scale.x *= -1;
+            opponent.animations.play('opponentWalk', 60, false);
+            winCondition += 1;
+        }
+    },
 
-            var array = this.randomProblemGenerator(problemLevel);
-            operand1 = Math.max(array[0],array[1]);
-            operand2 = Math.min(array[0],array[1]);
-            problem.setText(operand1 + ' - ' + operand2 + ' = ');
+    questionAnsweredWrong: function (){
+        //opponent has won the game
+        if (winCondition <= -9) {
+            winCondition++;
+            player.animations.play('walk', 60, false);
+            opponent.animations.play('opponentWalk', 60, false);
+            this.opponentHasWon();
+        }
+        else { //player incorrect, walk back
+            resetPlayerDirection = 1;
+            player.animations.play('walk', 60, false);
+            opponent.scale.x *= -1;
+            opponent.animations.play('opponentWalk', 60, false);
+            winCondition += 1;
         }
     },
 
