@@ -34,9 +34,9 @@ soccer.PlayState.prototype = {
 
 		problemLevel = levelSign;
 
-		var playTypePair = parameters[1].split('=');
+		var playTypePair = parameters[1].split('='); //error
 			//console.log(playTypePair);
-		console.log(playTypePair[1]);
+		//console.log(playTypePair[1]);
 	
 		var questionType = parseInt(playTypePair);
         //set subtraction mode to 1 for subtraction problems, 2 for addition
