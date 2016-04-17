@@ -3,7 +3,7 @@ var soccer = soccer || {};
 var operand1, operand2, questionType, playTypePair, questionType;
 
 var loadPlayState = function (){
-
+ 
     var answerOutput, validate, problem, answer;
     var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
     var numbuttons, teachingButton;
@@ -12,7 +12,8 @@ var loadPlayState = function (){
     var player, opponent, bg, goal1, goal2;
     var anim, walk,opponentWalk, playerDirection,gameplaySpeed,ballRotationSpeed;
     var resetPlayerDirection,winCondition,problemLevel;
-
+   
+   
 soccer.PlayState = function() {};
 
 //prototype the game state
@@ -20,6 +21,16 @@ soccer.PlayState.prototype = {
 
 
     create: function () {
+        //sounds
+         var music = soccer.game.add.audio('backgroundMusic');
+        // var firstWon = soccer.game.add.audio('wonFirst');
+        // var secondWon = soccer.game.add.audio('wonSecond');
+        // var lostFirst = soccer.game.add.audio('lostFirst');
+        //var lostSecond = soccer.game.add.audio('lostSecond');
+       //  var kick = soccer.game.add.audio('kick');
+        music.loopFull();
+       
+        
         //initial variable declarations
 		playerDirection = 0;
         winCondition = 0;
@@ -159,22 +170,28 @@ soccer.PlayState.prototype = {
 
     
     update: function () {
-
+var kick = soccer.game.add.audio('kick');
         //Make the characters "run"
         if(winCondition <= 9 && winCondition >= -9) {
             if (walk.isPlaying && playerDirection === 0) {
+                   // kick.play();
+
                 bg.x -= gameplaySpeed;
                 subbutton.x -= gameplaySpeed;
                 goal1.x -= gameplaySpeed;
                 goal2.x -= gameplaySpeed;
             }
             else if (walk.isPlaying && playerDirection === 1) { //when answer wrong
+                   // kick.play();
+
                 bg.x += gameplaySpeed;
                 subbutton.x += gameplaySpeed;
                 goal1.x += gameplaySpeed;
                 goal2.x += gameplaySpeed;
             }
             else if (walk.isPlaying && playerDirection === 1) {
+                  //  kick.play();
+
                 bg.x += gameplaySpeed;
                 subbutton.x += gameplaySpeed;
                 goal1.x += gameplaySpeed;
@@ -184,6 +201,7 @@ soccer.PlayState.prototype = {
             //Reset players to face the ball
             //if player answered wrong
             if (!walk.isPlaying & playerDirection === 1 && resetPlayerDirection === 1) {
+                kick.play();  //kick sound
                 player.scale.x *= -1;
                 resetPlayerDirection = 0;
                 playerDirection = 0;
@@ -191,6 +209,7 @@ soccer.PlayState.prototype = {
             }
             //if player answered right
             else if (!walk.isPlaying && resetPlayerDirection === 1) {
+                kick.play();   //kick sound
                 opponent.scale.x *= -1;
                 resetPlayerDirection = 0;
                 subbutton.x += gameplaySpeed;
@@ -213,6 +232,7 @@ soccer.PlayState.prototype = {
         else{
             //player has won
             if(winCondition > 9) {
+                
                 if ( walk.isPlaying){
                     player.x += gameplaySpeed;
                     opponent.x -= gameplaySpeed;
@@ -241,6 +261,7 @@ soccer.PlayState.prototype = {
 
     teachingScreen: function() {
         validate.setText('Switching to Teaching');
+       
         this.game.state.start('Teaching');
     },
 
@@ -396,10 +417,16 @@ soccer.PlayState.prototype = {
         restart.onInputUp.add(this.restartPlayState.bind(this));
         restart.anchor.set(0.5);
         restart.scale.x = 6;
+        var firstWon = soccer.game.add.audio('wonFirst');
+         var secondWon = soccer.game.add.audio('wonSecond');
+         firstWon.play();
+         
         var playAgainText = this.game.add.text(restart.x,restart.y, 'You won! Play again?', {font: '32px Arial', fill: '#000'});
+        
         playAgainText.anchor.set(0.5);
 
         problem.setText("");
+        secondWon.play();
     },
 
     opponentHasWon: function(){
@@ -407,10 +434,16 @@ soccer.PlayState.prototype = {
         restart.onInputUp.add(this.restartPlayState.bind(this));
         restart.anchor.set(0.5);
         restart.scale.x = 6;
+        var lostFirst = soccer.game.add.audio('lostFirst');
+         var lostSecond = soccer.game.add.audio('lostSecond');
+         lostFirst.play();
+         
         var playAgainText = this.game.add.text(restart.x,restart.y, 'You lost! Play again?', {font: '32px Arial', fill: '#000'});
+        
         playAgainText.anchor.set(0.5);
 
         problem.setText("");
+        lostSecond.play();
     },
 
     //Random problem generator
