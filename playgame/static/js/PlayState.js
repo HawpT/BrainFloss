@@ -21,25 +21,25 @@ soccer.PlayState.prototype = {
 
     create: function () {
         //initial variable declarations
-		playerDirection = 0;
+	playerDirection = 0;
         winCondition = 0;
-		gameplaySpeed = 6;
+	gameplaySpeed = 6;
         ballRotationSpeed = 7;
 
 	//set problem level here, 1, 2, 3 or 4
-		var parameters = window.location.search.substring(1).split('&');
-		var sPageURL = parameters[0].split('=');
-        //console.log(sPageURL);
+	var parameters = window.location.search.substring(1).split('&');
+	var sPageURL = parameters[0].split('=');
+        console.log(sPageURL);
 
-		problemLevel = parseInt(sPageURL[1]);
-        //console.log(problemLevel);
+	problemLevel = parseInt(sPageURL[1]);
+        console.log(problemLevel);
 
-		playTypePair = parameters[1].split('='); //error
+	playTypePair = parameters[1].split('='); //error
         //console.log(playTypePair[0]);
-		//console.log(playTypePair[1]);
+	//console.log(playTypePair[1]);
 	
-		questionType = parseInt(playTypePair[1]);
-        //set subtraction mode to 1 for subtraction problems, 2 for addition
+	questionType = parseInt(playTypePair[1]);
+        //set subtraction mode to 2 for subtraction problems, 1 for addition
 
         //draw the background image
         bg = this.game.add.image(-1575,0,'playfield');
@@ -49,16 +49,16 @@ soccer.PlayState.prototype = {
         //draw the play
         player =  this.game.add.sprite(208,350,'player',8);
         player.scale.set(1.2);
-		player.anchor.setTo(.5,.5);
-		walk = player.animations.add('walk');
+	player.anchor.setTo(.5,.5);
+	walk = player.animations.add('walk');
 
 		//draw the opponent
-		opponent = this.game.add.sprite(592, 350, 'opponent',8);
-		opponent.scale.set(1.2);
+	opponent = this.game.add.sprite(592, 350, 'opponent',8);
+	opponent.scale.set(1.2);
 		
-		opponent.anchor.setTo(.5,.5);
-		opponent.scale.x *= -1;
-		opponentWalk = opponent.animations.add('opponentWalk');
+	opponent.anchor.setTo(.5,.5);
+	opponent.scale.x *= -1;
+	opponentWalk = opponent.animations.add('opponentWalk');
 	
 
         //add the number input buttons to the screen
@@ -123,11 +123,11 @@ soccer.PlayState.prototype = {
         operand2 = array[1];
         console.log(questionType);
 
-        if (questionType === 0)
+        if (questionType === 1)
             text = operand1 + ' + ' + operand2 + ' = ';
-        else if (questionType === 1)
-            text = operand1 + ' - ' + operand2 + ' = ';
         else if (questionType === 2)
+            text = operand1 + ' - ' + operand2 + ' = ';
+        else if (questionType === 3)
             text = "stub for 1's 10's 100's";
 
         //output the problem
@@ -152,9 +152,6 @@ soccer.PlayState.prototype = {
         goal2.anchor.set(0.5);
 
         goal2.scale.x *= -1;
-
-
-
     },
 
     
@@ -300,7 +297,7 @@ soccer.PlayState.prototype = {
         //Prevent user from answering if game has been won
         if (winCondition < 10 && winCondition > -10) {
             //ADDITION
-            if (questionType === 0) {
+            if (questionType === 1) {
                 if (operand1 + operand2 === parseInt(answer)) {
                     validate.setText(operand1 + " + " + operand2 + " = " + parseInt(answer) + " is right!");
 
@@ -326,7 +323,7 @@ soccer.PlayState.prototype = {
             }
 
             //SUBTRACTION
-            else if (questionType === 1) {
+            else if (questionType === 2) {
                 if (operand1 - operand2 === parseInt(answer)) {
                     validate.setText(operand1 + " - " + operand2 + " = " + parseInt(answer) + " is right!");
                     this.questionAnsweredRight();
@@ -349,7 +346,7 @@ soccer.PlayState.prototype = {
             }
 
             //1's 10's 100's game type
-            else if (questionType === 2){
+            else if (questionType === 3){
 
             }
         }
