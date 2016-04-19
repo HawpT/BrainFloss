@@ -14,6 +14,7 @@ var text = "";
 loadPlayState();
 
 //Adding all the state we will need in our game.
+
 soccer.game.state.add('Preload', soccer.Preload);
 soccer.game.state.add('MainMenu', soccer.Menu);
 soccer.game.state.add('PlayState', soccer.PlayState);

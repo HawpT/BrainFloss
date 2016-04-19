@@ -17,6 +17,14 @@ soccer.Preload.prototype = {
         this.load.image('goal','../static/playgame/goals.png');
         this.load.image('lgbutton','../static/playgame/largebutton.png');
         this.load.image('xball','../static/playgame/xball1.png');
+        
+        //load sounds
+        this.load.audio('backgroundMusic', '../static/music/Crowd.mp3' );
+        this.load.audio('wonFirst', '../static/music/1_person_cheering.mp3' );
+        this.load.audio('wonSecond', '../static/music/Crowd_Applause.mp3' );
+        this.load.audio('lostFirst', '../static/soundfx/Wha-wha-wha-sound-effect.mp3' );
+        this.load.audio('lostSecond', '../static/soundfx/Failure-sound-effect.mp3' );
+        this.load.audio('kick', '../static/soundfx/Thump-sound-effect.mp3' );
     },
 
     //immediately when preload is done

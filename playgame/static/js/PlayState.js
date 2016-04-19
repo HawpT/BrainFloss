@@ -3,7 +3,7 @@ var soccer = soccer || {};
 var operand1, operand2, questionType, playTypePair, questionType;
 
 var loadPlayState = function (){
-
+ 
     var answerOutput, validate, problem, answer;
     var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
     var numbuttons, teachingButton;
@@ -12,7 +12,8 @@ var loadPlayState = function (){
     var player, opponent, bg, goal1, goal2;
     var anim, walk,opponentWalk, playerDirection,gameplaySpeed,ballRotationSpeed;
     var resetPlayerDirection,winCondition,problemLevel;
-
+   
+   
 soccer.PlayState = function() {};
 
 //prototype the game state
@@ -20,6 +21,16 @@ soccer.PlayState.prototype = {
 
 
     create: function () {
+        //sounds
+         var music = soccer.game.add.audio('backgroundMusic');
+        // var firstWon = soccer.game.add.audio('wonFirst');
+        // var secondWon = soccer.game.add.audio('wonSecond');
+        // var lostFirst = soccer.game.add.audio('lostFirst');
+        //var lostSecond = soccer.game.add.audio('lostSecond');
+       //  var kick = soccer.game.add.audio('kick');
+        music.loopFull();
+       
+        
         //initial variable declarations
 	playerDirection = 0;
         winCondition = 0;
@@ -156,22 +167,28 @@ soccer.PlayState.prototype = {
 
     
     update: function () {
-
+var kick = soccer.game.add.audio('kick');
         //Make the characters "run"
         if(winCondition <= 9 && winCondition >= -9) {
             if (walk.isPlaying && playerDirection === 0) {
+                   // kick.play();
+
                 bg.x -= gameplaySpeed;
                 subbutton.x -= gameplaySpeed;
                 goal1.x -= gameplaySpeed;
                 goal2.x -= gameplaySpeed;
             }
             else if (walk.isPlaying && playerDirection === 1) { //when answer wrong
+                   // kick.play();
+
                 bg.x += gameplaySpeed;
                 subbutton.x += gameplaySpeed;
                 goal1.x += gameplaySpeed;
                 goal2.x += gameplaySpeed;
             }
             else if (walk.isPlaying && playerDirection === 1) {
+                  //  kick.play();
+
                 bg.x += gameplaySpeed;
                 subbutton.x += gameplaySpeed;
                 goal1.x += gameplaySpeed;
@@ -181,6 +198,7 @@ soccer.PlayState.prototype = {
             //Reset players to face the ball
             //if player answered wrong
             if (!walk.isPlaying & playerDirection === 1 && resetPlayerDirection === 1) {
+                kick.play();  //kick sound
                 player.scale.x *= -1;
                 resetPlayerDirection = 0;
                 playerDirection = 0;
@@ -188,6 +206,7 @@ soccer.PlayState.prototype = {
             }
             //if player answered right
             else if (!walk.isPlaying && resetPlayerDirection === 1) {
+                kick.play();   //kick sound
                 opponent.scale.x *= -1;
                 resetPlayerDirection = 0;
                 subbutton.x += gameplaySpeed;
@@ -210,6 +229,7 @@ soccer.PlayState.prototype = {
         else{
             //player has won
             if(winCondition > 9) {
+                
                 if ( walk.isPlaying){
                     player.x += gameplaySpeed;
                     opponent.x -= gameplaySpeed;
@@ -238,6 +258,7 @@ soccer.PlayState.prototype = {
 
     teachingScreen: function() {
         validate.setText('Switching to Teaching');
+       
         this.game.state.start('Teaching');
     },
 
@@ -393,9 +414,16 @@ soccer.PlayState.prototype = {
         restart.onInputUp.add(this.restartPlayState.bind(this));
         restart.anchor.set(0.5);
         restart.scale.x = 6;
+        var firstWon = soccer.game.add.audio('wonFirst');
+         var secondWon = soccer.game.add.audio('wonSecond');
+         firstWon.play();
+         
         var playAgainText = this.game.add.text(restart.x,restart.y, 'You won! Play again?', {font: '32px Arial', fill: '#000'});
+        
         playAgainText.anchor.set(0.5);
 
+        problem.setText("");
+        secondWon.play();
     },
 
     opponentHasWon: function(){
@@ -403,10 +431,17 @@ soccer.PlayState.prototype = {
         restart.onInputUp.add(this.restartPlayState.bind(this));
         restart.anchor.set(0.5);
         restart.scale.x = 6;
+        var lostFirst = soccer.game.add.audio('lostFirst');
+         var lostSecond = soccer.game.add.audio('lostSecond');
+         lostFirst.play();
+         
         var playAgainText = this.game.add.text(restart.x,restart.y, 'You lost! Play again?', {font: '32px Arial', fill: '#000'});
+        
         playAgainText.anchor.set(0.5);
-    },
 
+        problem.setText("");
+        lostSecond.play();
+    },
 
     //Random problem generator
     randomProblemGenerator: function (level){ //level is in int
@@ -417,8 +452,8 @@ soccer.PlayState.prototype = {
             array = this.levelTwo();
         else if(level === 3)
             array = this.levelThree();
-	else if(level ===4)
-		array = this.levelFour();
+        else if(level ===4)
+            array = this.levelFour();
         else{
             //debugging case, 0,0 will be a flag for something going wrong
             array = [0,0];
@@ -435,226 +470,64 @@ soccer.PlayState.prototype = {
         var n = Math.floor(Math.random()*10);
 
         //based on the first number, ensure the second number does not make their sum exceed 10
-        if(r === 9)
-            n = n%2;
-        else if(r === 8)
-            n = n%3;
-        else if(r === 7)
-            n = n%4;
-        else if(r === 6)
-            n = n%5;
-        else if(r === 5)
-            n = n%6;
-        else if(r === 4)
-            n = n%7;
-        else if(r === 3)
-            n = n%8;
-        else if(r === 2)
-            n = n%9;
+        if (questionType === 0) {
+            n = n % (10 - r)
+        }
+
+        if (r > n)
+            return [r, n];
         else
-            n = n%10;
-
-
-        if (r>n)
-		return [r, n];
-	else	
-		return [n, r];
-
+            return [n, r];
     }, // closes levelOne function
 
-
     //helper method for level 2
-    levelTwo: function(){
-        var r = Math.floor(Math.random()*10);// it will round down
-        r = r*10; // makes variable a tens
-        var n = Math.floor(Math.random()*10);
-        var final;
-        if(r === 90){
-            n = (n%2)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else if(r === 80){
-            n = (n%3)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else if(r === 70){
-            n = (n%4)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else if(r === 60){
-            n = (n%5)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else if(r === 50){
-            n = (n%6)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else if(r === 30){
-            n = (n%8)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else if(r === 20){
-            n = (n%9)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else if(r === 10){
-            n = (n%10)*10;
-            final = this.levelTwoUnique(n);
-        }
-        else {
-            n = n*10;
-            final = this.levelTwoUnique(n);
-        }
-        var rinal = this.levelTwoUnique(r);
+    levelTwo: function() {
+        var r = Math.floor(Math.random() * 100);// it will round down
 
-        if (rinal>final)
-		return [rinal, final];
-	else	
-		return [final,rinal];;
+        var n = Math.floor(Math.random() * 100);
+
+        if (questionType === 0) {
+            n = n % (100 - r)
+        }
+
+        if (r>n)
+		    return [r, n];
+	    else
+		    return [n,r];
     }, //closes levelTwo function
 
-
     //helper method for level 3
-    levelThree:function(){
-        var r = Math.floor(Math.random()*10);// it will round down
-        r = r*100;
-        var n = Math.floor(Math.random()*10);
-        var final;
-        if(r === 900){
-            n = (n%2)*100;
-            final = this.levelThreeUnique(n);
-        }
-        else if(r === 800){
-            n = (n%3)*100;
-            final = this.levelThreeUnique(n);
-        }
-        else if(r === 700){
-            n = (n%4)*100;
-            final = this.levelThreeUnique(n);
-        }
-        else if(r === 600){
-            n = (n%5)*100;
-            final = this.levelThreeUnique(n);
-        }
-        else if(r === 500){
-            n = (n%6)*100;
-            final = this.levelThreeUnique(n);
-        }
-        else if(r === 300){
-            n = (n%8)*100;
-            final =this. levelThreeUnique(n);
-        }
-        else if(r === 200){
-            n = (n%9)*100;
-            final = this.levelThreeUnique(n);
-        }
-        else if(r === 100){
-            n = (n%10)*100;
-            final = this.levelThreeUnique(n);
+    levelThree:function() {
+        var r = Math.floor(Math.random() * 1000);// it will round down
 
+        var n = Math.floor(Math.random() * 1000);
+
+        if (questionType === 0) {
+            n = n % (1000 - r)
         }
-        else {
-            n = n*100;
-            final = this.levelThreeUnique(n);
-        }
-        var rinal = this.levelThreeUnique(r);
-        if (rinal>final)
-		return [rinal, final];
-	else	
-		return [final,rinal];
-    },// closes levelThree
 
-
-		    //helper method for level 4
-		    levelFour:function(){
-			var r = Math.floor(Math.random()*10);// it will round down
-			r = r*1000;
-			var n = Math.floor(Math.random()*10);
-			var final;
-			if(r === 9000){
-			    n = (n%2)*1000;
-			    final = this.levelFourUnique(n);
-			}
-			else if(r === 8000){
-			    n = (n%3)*100;
-			    final = this.levelFourUnique(n);
-			}
-			else if(r === 7000){
-			    n = (n%4)*100;
-			    final = this.levelFourUnique(n);
-			}
-			else if(r === 6000){
-			    n = (n%5)*100;
-			    final = this.levelFourUnique(n);
-			}
-			else if(r === 5000){
-			    n = (n%6)*100;
-			    final = this.levelFourUnique(n);
-			}
-			else if(r === 3000){
-			    n = (n%8)*100;
-			    final =this.levelFourUnique(n);
-			}
-			else if(r === 2000){
-			    n = (n%9)*100;
-			    final = this.levelFourUnique(n);
-			}
-			else if(r === 1000){
-			    n = (n%10)*100;
-			    final = this.levelFourUnique(n);
-
-			}
-			else {
-			    n = n*100;
-			    final = this.levelFourUnique(n);
-			}
-			var rinal = this.levelFourUnique(r);
-		
-			if (rinal>final)
-				return [rinal, final];
-			else	
-				return [final,rinal];
-		    },// closes levelFour
-
-    /*
-     *The following functions (2) create a different, more complex variable for var's returned
-     */
-     /*
-     *The following functions (2) create a different, more complex variable for var's returned
-     */
-    levelTwoUnique:function(initial) { //initial is int
-        var i = Math.floor(Math.random() * 10); 
-
-	i = initial - i; //added something to the ones position
-	if (i>=0)	
-		return i;
-	else
-		return (i*-1);
-        
+        if (r > n)
+            return [r, n];
+        else
+            return [n, r];
     },
 
+    //helper method for level 4
+    levelFour:function(){
+        var r = Math.floor(Math.random() * 10000);// it will round down
 
-    levelThreeUnique:function(initial){
-        var i = Math.floor(Math.random()*10)*10; //creates num in tens place
-        var is = Math.floor(Math.random()*10); //creates num in ones
-	
-	if ((initial - i)>=0)
-		return initial - i + is;
-	else
-		return intitial + i - is;
-    },
+        var n = Math.floor(Math.random() * 10000);
 
-	levelFourUnique:function(initial){
-			var i = Math.floor(Math.random()*10)*10; //creates num in 10's place
-			var is = Math.floor(Math.random()*10); //creates num in 1's
-			var it = Math.floor(Math.random()*10)*100; //creates num in 100's place
-	
-			if ((initial - it)>=0)
-				return initial - it + i + is;
-			else
-				return initial + it - i - is;	
-	
-		}
+        if (questionType === 0) {
+            n = n % (10000 - r)
+        }
+
+        if (r>n)
+            return [r, n];
+        else
+            return [n,r];
+    }// closes levelFour
+
 };
 };
 
