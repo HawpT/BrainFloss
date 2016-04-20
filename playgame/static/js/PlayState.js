@@ -1,17 +1,17 @@
 var soccer = soccer || {};
 
-var operand1, operand2, questionType, playTypePair, questionType;
+var operand1, operand2, questionType, playTypePair, problemLevel,answer;
 
 var loadPlayState = function (){
  
-    var answerOutput, validate, problem, answer;
+    var answerOutput, validate, problem;
     var zerobutton,onebutton,twobutton,threebutton,fourbutton,fivebutton,sixbutton,sevenbutton,eightbutton,ninebutton;
     var numbuttons, teachingButton;
     var delbutton, subbutton, button;
     var text = new Text(), winStateChecker;
     var player, opponent, bg, goal1, goal2;
     var anim, walk,opponentWalk, playerDirection,gameplaySpeed,ballRotationSpeed;
-    var resetPlayerDirection,winCondition,problemLevel;
+    var resetPlayerDirection,winCondition;
    
    
 soccer.PlayState = function() {};
