@@ -16,7 +16,12 @@ soccer.Preload.prototype = {
         this.load.image('playfield','../static/playgame/playfield.png');
         this.load.image('goal','../static/playgame/goals.png');
         this.load.image('lgbutton','../static/playgame/largebutton.png');
-        this.load.image('xball','../static/playgame/xball1.png');
+        this.load.image('xball1','../static/playgame/xball1.png');
+        this.load.image('10ball','../static/playgame/10ball.png');
+        this.load.image('100ball','../static/playgame/100ball.png');
+        this.load.image('ball1','../static/playgame/ball1.png');
+  		this.load.image('x10ball','../static/playgame/x10ball.png');
+        this.load.image('x100ball','../static/playgame/x100ball.png');
         
         //load sounds
         this.load.audio('backgroundMusic', '../static/music/Crowd.mp3' );
