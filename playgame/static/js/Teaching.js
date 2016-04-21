@@ -100,7 +100,7 @@ soccer.Teaching.prototype = {
 					
 				operand4= operand2-(operand3*100)
 				
-				if(operand4>10){
+				if(operand4>10|| opperand2===0){
 						operand5 = Math.floor(operand4/10)
 						for(var i=0; i<operand5; i++){
 							ballgroup10.create(200*i, 1450, '10ball');
@@ -168,7 +168,7 @@ soccer.Teaching.prototype = {
 				}	
 		}
 		//subtraction
-		else if (problemAnswer<operand1){
+		else if (problemAnswer<operand1||operand2===0){
 			problemAnswer = operand1-operand2;
 			text = operand1 + ' - ' + operand2 + ' = '+ problemAnswer;
 			probelm=this.game.add.text(0, 0, text, {font: '64px Arial', fill: '#000'});
@@ -214,8 +214,8 @@ soccer.Teaching.prototype = {
 				
 			if(operand2<10){
 				for(var i=0; i<operand2; i++){
-					ballgroup5.create(100*i, 776, 'xball1');
-					ballgroup5.scale.set(.4);
+					ballgroup5.create(100*i, 1600, 'xball1');
+					ballgroup5.scale.set(.2);
 					}
 			}
 				//second number is greater than 10	
@@ -237,8 +237,8 @@ soccer.Teaching.prototype = {
 						operand6= operand4-(operand5*10);
 						
 						for(var i=0; i<operand6;i++){
-							ballgroup8.create(100*i, 775, 'xball1');
-							ballgroup8.scale.set(.4);}
+							ballgroup8.create(200*i, 1600, 'xball1');
+							ballgroup8.scale.set(.2);}
 			
 					}
 					
