@@ -470,7 +470,7 @@ var kick = soccer.game.add.audio('kick');
         var n = Math.floor(Math.random()*10);
 
         //based on the first number, ensure the second number does not make their sum exceed 10
-        if (questionType === 0) {
+        if (questionType === 1) {
             n = n % (10 - r)
         }
 
@@ -486,7 +486,7 @@ var kick = soccer.game.add.audio('kick');
 
         var n = Math.floor(Math.random() * 100);
 
-        if (questionType === 0) {
+        if (questionType === 1) {
             n = n % (100 - r)
         }
 
@@ -502,7 +502,7 @@ var kick = soccer.game.add.audio('kick');
 
         var n = Math.floor(Math.random() * 1000);
 
-        if (questionType === 0) {
+        if (questionType === 1) {
             n = n % (1000 - r)
         }
 
@@ -518,7 +518,7 @@ var kick = soccer.game.add.audio('kick');
 
         var n = Math.floor(Math.random() * 10000);
 
-        if (questionType === 0) {
+        if (questionType === 1) {
             n = n % (10000 - r)
         }
 
