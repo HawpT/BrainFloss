@@ -214,7 +214,7 @@ soccer.Teaching.prototype = {
 				
 			if(operand2<10){
 				for(var i=0; i<operand2; i++){
-					ballgroup5.create(100*i, 1600, 'xball1');
+					ballgroup5.create(200*i, 1600, 'xball1');
 					ballgroup5.scale.set(.2);
 					}
 			}
