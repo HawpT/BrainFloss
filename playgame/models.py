@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 # Create your models here.  models are tables
 
+
 class Score(models.Model):
     fscore = models.IntegerField()
 
@@ -11,21 +12,37 @@ class Score(models.Model):
         return self.fscore
 
     def get_final_score(self):
-        return "Your Final score is :" + self.fscore
+        return "Your Final score is :" + self.fscore[1]
 
 
 class Level_One(models.Model):
-    add_score1 = models.IntegerField(blank=True, null=True)
-    sub_score1 = models.IntegerField(blank=True, null=True)
+    operand1 = models.IntegerField(blank=True, null=False)
+    operand2 = models.IntegerField(blank=True, null=True)
+    student_answer = models.IntegerField(blank=True, null=False)
+    problem_type = models.IntegerField(blank=True, null=False)
 
     def __str__(self):
-        return "Add Score:" + self.add_score + "Sub Score:" + self.sub_score1
+        if self.problem_type[0] == "1":
+            return "Level One Addition Problem: " + self.operand1[0] + "+" + self.operand2[0] + "=" + self.student_answer[0]
+        elif self.problem_type[0] == "2":
+            return "Level One Addition Problem: " + self.operand1[0] + "-" + self.operand2[0] + "=" + self.student_answer[0]
+        elif self.problem_type[0] == "3":
+            return "Level One Addition Problem: " + self.operand1[0] + " is in the " + self.student_answer[0] + "'s place."
 
-    def a_score1(self):
-        return "Level one Addition SCORE:" + self.add_score1
+    def score(self):
+        if self.problem_type[0] == "1":
+            if (int(self.operand1[0]) + int(self.operand2[0])) == int(self.student_answer[0]):
+                return 1
+            else:
+                return 0
+        elif self.problem_type[0] == "2":
+            if (int(self.operand1[0]) - int(self.operand2[0])) == int(self.student_answer[0]):
+                return 1
+            else:
+                return 0
+        elif self.problem_type[0] == "3":
+            return "Level One Digits Problem: " + self.operand1[0] + " is in the " + self.student_answer[0] + "'s place."
 
-    def s_score1(self):
-        return "Level One Subtraction SCORE:" + self.sub_score1
 
 
 class Level_Two(models.Model):
@@ -33,13 +50,13 @@ class Level_Two(models.Model):
     sub_score2 = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return "Add Score:" + self.add_score2 + "Sub Score:" + self.sub_score2
+        return "Add Score:" + self.add_score2[1] + "Sub Score:" + self.sub_score2[1]
 
     def a_score2(self):
-        return "Level two Addition SCORE:" + self.add_score2
+        return "Level two Addition SCORE:" + self.add_score2[1]
 
     def s_score2(self):
-        return "Level two Subtraction SCORE:" + self.sub_score2
+        return "Level two Subtraction SCORE:" + self.sub_score2[1]
 
 
 class Level_Three(models.Model):
@@ -47,13 +64,13 @@ class Level_Three(models.Model):
     sub_score3 = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return "Add Score:" + self.add_score3 + "Sub Score:" + self.sub_score3
+        return "Add Score:" + self.add_score3[1] + "Sub Score:" + self.sub_score3[1]
 
     def a_score3(self):
-        return "Level three Addition SCORE:" + self.add_score3
+        return "Level three Addition SCORE:" + self.add_score3[1]
 
     def s_score3(self):
-        return "Level three Subtraction SCORE:" + self.sub_score3
+        return "Level three Subtraction SCORE:" + self.sub_score3[1]
 
 
 class Student(models.Model):

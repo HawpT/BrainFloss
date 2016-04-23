@@ -5,6 +5,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from .forms import SubmitScoresLevel1
+
+
 
 def logout_view(request):
 	logout(request)
@@ -12,12 +15,16 @@ def logout_view(request):
 #def playgame(request):
 	#return render(request, "base.html") #extra
 
-
 @login_required(login_url="login/")
 def home(request):
 	return render(request, "home.html")
 
 def play(request):
+	#this handles writing scores to the database
+	form = SubmitScoresLevel1(request.POST or None)
+	if form.is_valid():
+		save_it = form.save(commit=False)
+		save_it.save()
 	return render(request, "play.html")
 
 def stats(request):

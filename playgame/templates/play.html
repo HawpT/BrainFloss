@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-
 {% block content %}
 
 
@@ -14,7 +13,9 @@
             </div>
                <span style="color:#FF3D3D"> <p>Directions:&nbspclick on the ball to begin.  <br>Use the numeric buttons at the bottom and submit your answer by clicking on the ball.</p>
                 <table style="width:100%">
-  
+                    <form method="POST" action=""> {% csrf_token %}
+                        {{form.field.as_hidden}}
+                    </form>
   <script src = "{% static 'js/Main.js'%}"></script>
   
    
