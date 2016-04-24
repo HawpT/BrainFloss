@@ -17,10 +17,10 @@ class LoginForm(AuthenticationForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'name': 'password'})
     )
 
-
 class SubmitScoresLevel1(ModelForm):
     class Meta:
         model = Level_One
-        fields = ['operand1', 'operand2', 'student_answer', 'problem_type']
+        fields = ['op1', 'op2', 'student_answer', 'problem_type', 'student_id']
+
 
 

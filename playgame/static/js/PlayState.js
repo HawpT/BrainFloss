@@ -2,6 +2,27 @@ var soccer = soccer || {};
 
 var operand1, operand2, questionType, playTypePair, problemLevel,answer;
 
+//WRITES TO DATABASE
+function create_post() {
+    console.log("create post is working");
+    $.ajax({
+        url: "create_post/",
+        type: "POST",
+        data: {the_post: $('#post_text').val()},
+        success: function (json) {
+            $('#post_text').val('');
+            console.log(json);
+            console.log("success");
+        },
+        error: function (xhr, errmsg, err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    })
+    //end ajax
+}
+
 var loadPlayState = function (){
  
     var answerOutput, validate, problem;
@@ -10,7 +31,7 @@ var loadPlayState = function (){
     var delbutton, subbutton, button;
     var text = new Text(), winStateChecker;
     var player, opponent, bg, goal1, goal2;
-    var anim, walk,opponentWalk, playerDirection,gameplaySpeed,ballRotationSpeed;
+    var anim, walk,opponentWalk, playerDirection,gameplaySpeed,ballRotationSpeed,moveDistance;
     var resetPlayerDirection,winCondition;
    
    
@@ -32,24 +53,24 @@ soccer.PlayState.prototype = {
        
         
         //initial variable declarations
-	playerDirection = 0;
+	    playerDirection = 0;
         winCondition = 0;
-	gameplaySpeed = 6;
+	    gameplaySpeed = 6;
         ballRotationSpeed = 7;
 
-	//set problem level here, 1, 2, 3 or 4
-	var parameters = window.location.search.substring(1).split('&');
-	var sPageURL = parameters[0].split('=');
+        //set problem level here, 1, 2, 3 or 4
+        var parameters = window.location.search.substring(1).split('&');
+        var sPageURL = parameters[0].split('=');
         console.log(sPageURL);
 
-	problemLevel = parseInt(sPageURL[1]);
+        problemLevel = parseInt(sPageURL[1]);
         console.log(problemLevel);
 
-	playTypePair = parameters[1].split('='); //error
+        playTypePair = parameters[1].split('='); //error
         //console.log(playTypePair[0]);
-	//console.log(playTypePair[1]);
+        //console.log(playTypePair[1]);
 	
-	questionType = parseInt(playTypePair[1]);
+        questionType = parseInt(playTypePair[1]);
         //set subtraction mode to 2 for subtraction problems, 1 for addition
 
         //draw the background image
@@ -60,17 +81,17 @@ soccer.PlayState.prototype = {
         //draw the play
         player =  this.game.add.sprite(208,350,'player',8);
         player.scale.set(1.2);
-	player.anchor.setTo(.5,.5);
-	walk = player.animations.add('walk');
+        player.anchor.setTo(.5,.5);
+        walk = player.animations.add('walk');
 
 		//draw the opponent
-	opponent = this.game.add.sprite(592, 350, 'opponent',8);
-	opponent.scale.set(1.2);
-		
-	opponent.anchor.setTo(.5,.5);
-	opponent.scale.x *= -1;
-	opponentWalk = opponent.animations.add('opponentWalk');
-	
+        opponent = this.game.add.sprite(592, 350, 'opponent',8);
+        opponent.scale.set(1.2);
+
+        opponent.anchor.setTo(.5,.5);
+        opponent.scale.x *= -1;
+        opponentWalk = opponent.animations.add('opponentWalk');
+
 
         //add the number input buttons to the screen
         onebutton = new LabelButton(soccer.game,30,570,'numbutton','1',this.actionOnClicked,this,0,0,0,0);
@@ -170,6 +191,7 @@ soccer.PlayState.prototype = {
 var kick = soccer.game.add.audio('kick');
         //Make the characters "run"
         if(winCondition <= 9 && winCondition >= -9) {
+
             if (walk.isPlaying && playerDirection === 0) {
                    // kick.play();
 
@@ -316,7 +338,11 @@ var kick = soccer.game.add.audio('kick');
     //helper method to check whether the answer is right or wrong and provide feedback
     checkAnswer: function() {
         //Prevent user from answering if game has been won
-        if (winCondition < 10 && winCondition > -10) {
+        if (winCondition < 10 && winCondition > -10 && answer.text.length > 0) {
+
+            //WRITE TO THE DATABASE
+            create_post();
+
             //ADDITION
             if (questionType === 1) {
                 if (operand1 + operand2 === parseInt(answer)) {
@@ -530,6 +556,9 @@ var kick = soccer.game.add.audio('kick');
 
 };
 };
+
+
+
 
 
 

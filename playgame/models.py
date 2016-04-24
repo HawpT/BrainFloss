@@ -16,32 +16,33 @@ class Score(models.Model):
 
 
 class Level_One(models.Model):
-    operand1 = models.IntegerField(blank=True, null=False)
-    operand2 = models.IntegerField(blank=True, null=True)
-    student_answer = models.IntegerField(blank=True, null=False)
-    problem_type = models.IntegerField(blank=True, null=False)
+    op1 = models.IntegerField(blank=False, null=True)
+    op2 = models.IntegerField(blank=True, null=True)
+    student_answer = models.IntegerField(blank=False, null=False)
+    problem_type = models.IntegerField(blank=False, null=False)
+    student_id = models.IntegerField(blank=False, null=False)
 
     def __str__(self):
         if self.problem_type[0] == "1":
-            return "Level One Addition Problem: " + self.operand1[0] + "+" + self.operand2[0] + "=" + self.student_answer[0]
+            return "Level One Addition Problem: " + self.op1[0] + "+" + self.op2[0] + "=" + self.student_answer[0]
         elif self.problem_type[0] == "2":
-            return "Level One Addition Problem: " + self.operand1[0] + "-" + self.operand2[0] + "=" + self.student_answer[0]
+            return "Level One Addition Problem: " + self.op1[0] + "-" + self.op2[0] + "=" + self.student_answer[0]
         elif self.problem_type[0] == "3":
-            return "Level One Addition Problem: " + self.operand1[0] + " is in the " + self.student_answer[0] + "'s place."
+            return "Level One Addition Problem: " + self.op1[0] + " is in the " + self.student_answer[0] + "'s place."
 
     def score(self):
         if self.problem_type[0] == "1":
-            if (int(self.operand1[0]) + int(self.operand2[0])) == int(self.student_answer[0]):
+            if (int(self.op1[0]) + int(self.op2[0])) == int(self.student_answer[0]):
                 return 1
             else:
                 return 0
         elif self.problem_type[0] == "2":
-            if (int(self.operand1[0]) - int(self.operand2[0])) == int(self.student_answer[0]):
+            if (int(self.op1[0]) - int(self.op2[0])) == int(self.student_answer[0]):
                 return 1
             else:
                 return 0
         elif self.problem_type[0] == "3":
-            return "Level One Digits Problem: " + self.operand1[0] + " is in the " + self.student_answer[0] + "'s place."
+            return "Level One Digits Problem: " + self.op1[0] + " is in the " + self.student_answer[0] + "'s place."
 
 
 
@@ -78,7 +79,7 @@ class Student(models.Model):
 
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length = 30)
-    student_id = models.IntegerField(blank=True, null=True)
+    student_id = models.IntegerField(blank=False, null=True)
 
     def get_student_fname(self):
         return self.first_name
@@ -93,7 +94,7 @@ class Student(models.Model):
 class Teacher(models.Model):
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length = 30)
-    teach_id = models.IntegerField(blank=True, null=True)
+    teach_id = models.IntegerField(blank=False, null=True)
 
     def teach_fname(self):
         return self.first_name

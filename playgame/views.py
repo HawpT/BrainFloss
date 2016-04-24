@@ -19,6 +19,7 @@ def logout_view(request):
 def home(request):
 	return render(request, "home.html")
 
+@login_required(login_url="login/")
 def play(request):
 	#this handles writing scores to the database
 	form = SubmitScoresLevel1(request.POST or None)
@@ -27,6 +28,7 @@ def play(request):
 		save_it.save()
 	return render(request, "play.html")
 
+@login_required(login_url="login/")
 def stats(request):
 	return render(request, "stats.html")
 
