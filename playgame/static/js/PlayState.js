@@ -57,14 +57,15 @@ soccer.PlayState.prototype = {
         winCondition = 0;
 	    gameplaySpeed = 6;
         ballRotationSpeed = 7;
+        moveDistance = 175;
 
         //set problem level here, 1, 2, 3 or 4
         var parameters = window.location.search.substring(1).split('&');
         var sPageURL = parameters[0].split('=');
-        console.log(sPageURL);
+        //console.log(sPageURL);
 
         problemLevel = parseInt(sPageURL[1]);
-        console.log(problemLevel);
+        //console.log(problemLevel);
 
         playTypePair = parameters[1].split('='); //error
         //console.log(playTypePair[0]);
@@ -168,11 +169,11 @@ soccer.PlayState.prototype = {
         problem.anchor.set(1,0);
 
         //this is helper text that lets me see whether we are winning or losing
-        //winStateChecker = this.game.add.text(470,460,'No Guesses Made',{font: '32px Arial', fill: '#000'});
+        winStateChecker = this.game.add.text(470,460,'No Guesses Made',{font: '32px Arial', fill: '#000'});
 
 
         //create a text field for answer validation
-        validate = this.game.add.text(400,500,answer, {font: '32px Arial', fill: '#000'});
+        validate = this.game.add.text(400,500,"", {font: '32px Arial', fill: '#000'});
 
         //output the students answer
         answerOutput = this.game.add.text(problem.x + 5 /*position to the right of the problem text*/
@@ -188,33 +189,59 @@ soccer.PlayState.prototype = {
 
     
     update: function () {
-var kick = soccer.game.add.audio('kick');
+        var kick = soccer.game.add.audio('kick');
         //Make the characters "run"
         if(winCondition <= 9 && winCondition >= -9) {
 
-            if (walk.isPlaying && playerDirection === 0) {
-                   // kick.play();
-
-                bg.x -= gameplaySpeed;
-                subbutton.x -= gameplaySpeed;
-                goal1.x -= gameplaySpeed;
-                goal2.x -= gameplaySpeed;
+            //winStateChecker.setText(moveDistance);
+            if (walk.isPlaying && playerDirection === 0 && moveDistance >= 0) {
+                // kick.play();
+                if(moveDistance - gameplaySpeed >= 0) {
+                    bg.x -= gameplaySpeed;
+                    subbutton.x -= gameplaySpeed;
+                    goal1.x -= gameplaySpeed;
+                    goal2.x -= gameplaySpeed;
+                }
+                else{
+                    bg.x -= moveDistance;
+                    subbutton.x -= moveDistance;
+                    goal1.x -= moveDistance;
+                    goal2.x -= moveDistance;
+                }
+                moveDistance -= gameplaySpeed;
             }
-            else if (walk.isPlaying && playerDirection === 1) { //when answer wrong
-                   // kick.play();
-
-                bg.x += gameplaySpeed;
-                subbutton.x += gameplaySpeed;
-                goal1.x += gameplaySpeed;
-                goal2.x += gameplaySpeed;
+            else if (walk.isPlaying && playerDirection === 1 && moveDistance >= 0) { //when answer wrong
+                // kick.play();
+                if(moveDistance - gameplaySpeed >= 0) {
+                    bg.x += gameplaySpeed;
+                    subbutton.x += gameplaySpeed;
+                    goal1.x += gameplaySpeed;
+                    goal2.x += gameplaySpeed;
+                }
+                else{
+                    bg.x += moveDistance;
+                    subbutton.x += moveDistance;
+                    goal1.x += moveDistance;
+                    goal2.x += moveDistance;
+                }
+                moveDistance -= gameplaySpeed;
             }
-            else if (walk.isPlaying && playerDirection === 1) {
-                  //  kick.play();
+            else if (walk.isPlaying && playerDirection === 1 && moveDistance >= 0) {
+                //  kick.play();
 
-                bg.x += gameplaySpeed;
-                subbutton.x += gameplaySpeed;
-                goal1.x += gameplaySpeed;
-                goal2.x += gameplaySpeed;
+                if(moveDistance - gameplaySpeed >= 0) {
+                    bg.x += gameplaySpeed;
+                    subbutton.x += gameplaySpeed;
+                    goal1.x += gameplaySpeed;
+                    goal2.x += gameplaySpeed;
+                }
+                else{
+                    bg.x += moveDistance;
+                    subbutton.x += moveDistance;
+                    goal1.x += moveDistance;
+                    goal2.x += moveDistance;
+                }
+                moveDistance -= gameplaySpeed;
             }
 
             //Reset players to face the ball
@@ -235,24 +262,36 @@ var kick = soccer.game.add.audio('kick');
 
             }
 
-
             //BALL animations
             //calc distance between both players and roll the ball until it is inbetween both
             var distance = Math.abs(Math.abs(player.x) - Math.abs(opponent.x)) / 2;
             if (!walk.isPlaying && (player.x + distance) > subbutton.x) {
-                subbutton.x += gameplaySpeed;
-                subbutton.angle += ballRotationSpeed;
+                if(distance - Math.abs(player.x - subbutton.x) < gameplaySpeed){
+                    subbutton.x = player.x + distance;
+                    subbutton.angle += ballRotationSpeed;
+                }
+                else {
+                    subbutton.x += gameplaySpeed;
+                    subbutton.angle += ballRotationSpeed;
+                }
             }
             else if (!walk.isPlaying && (player.x + distance + 1) < subbutton.x) {
-                subbutton.x -= gameplaySpeed;
-                subbutton.angle -= ballRotationSpeed;
+                if(distance - Math.abs(opponent.x - subbutton.x) < gameplaySpeed) {
+                    subbutton.x = player.x + distance;
+                    subbutton.angle += ballRotationSpeed;
+                }
+                else {
+                    subbutton.x -= gameplaySpeed;
+                    subbutton.angle -= ballRotationSpeed;
+                }
+
             }
         }
         else{
             //player has won
             if(winCondition > 9) {
-                
-                if ( walk.isPlaying){
+
+                if ( walk.isPlaying && player.x < 350){
                     player.x += gameplaySpeed;
                     opponent.x -= gameplaySpeed;
                 }
@@ -263,7 +302,7 @@ var kick = soccer.game.add.audio('kick');
             }
             //opponent has won
             else {
-                if ( opponentWalk.isPlaying){
+                if ( opponentWalk.isPlaying && player.x < 350){
                     opponent.x -= gameplaySpeed;
                     player.x += gameplaySpeed;
                 }
@@ -338,10 +377,10 @@ var kick = soccer.game.add.audio('kick');
     //helper method to check whether the answer is right or wrong and provide feedback
     checkAnswer: function() {
         //Prevent user from answering if game has been won
-        if (winCondition < 10 && winCondition > -10 && answer.text.length > 0) {
-
+        if (winCondition < 10 && winCondition > -10 && answer.length > 0) {
+            moveDistance = 175;
             //WRITE TO THE DATABASE
-            create_post();
+            //create_post();
 
             //ADDITION
             if (questionType === 1) {

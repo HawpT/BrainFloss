@@ -14,13 +14,14 @@
                <span style="color:#FF3D3D"> <p>Directions:&nbspclick on the ball to begin.  <br>Use the numeric buttons at the bottom and submit your answer by clicking on the ball.</p>
                 <table style="width:100%">
 
-                    <form id="dbwrite" method="POST"> {% csrf_token %}
+                    <form id="dbwrite" method="POST" action="/play/"> {% csrf_token %}
                         {{form.field.as_hidden}}
-                        <div class=data id="op1"></div>
-                        <div class=data id="op2"></div>
-                        <div class=data id="student_answer"></div>
-                        <div class=data id="problem_type"></div>
-                        <div class=data id="student_id"></div>
+                        <input class=data id="op1" value = "{{ }}">
+                        <input class=data id="op2">
+                        <input class=data id="student_answer">
+                        <input class=data id="problem_type">
+                        <input class=data id="problem_level">
+                        <input class=data id="student_id">
                     </form>
 
                     <script src = "{% static 'js/Main.js'%}"></script>
