@@ -133,7 +133,7 @@ soccer.PlayState.prototype = {
         var array = this.randomProblemGenerator(problemLevel);
         operand1 = array[0];
         operand2 = array[1];
-        console.log(questionType);
+        //console.log(questionType);
 
         if (questionType === 1)
             text = operand1 + ' + ' + operand2 + ' = ';
@@ -148,7 +148,7 @@ soccer.PlayState.prototype = {
         problem.anchor.set(1,0);
 
         //this is helper text that lets me see whether we are winning or losing
-        winStateChecker = this.game.add.text(470,460,'No Guesses Made',{font: '32px Arial', fill: '#000'});
+        winStateChecker = this.game.add.text(470,460,'',{font: '32px Arial', fill: '#000'});
 
 
         //create a text field for answer validation

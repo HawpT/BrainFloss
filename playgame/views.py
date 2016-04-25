@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .forms import SubmitScores
+from .forms import Student
 
 
 def logout_view(request):
@@ -17,7 +18,7 @@ def logout_view(request):
 # def playgame(request):
 # return render(request, "base.html") #extra
 
-@login_required(login_url="login/")
+
 def home(request):
     return render(request, "home.html")
 
@@ -30,7 +31,10 @@ def play(request):
         if form.is_valid():
             response_data = {}
             response_data['msg'] = 'Post was successful.'
-            print("Post success.")
+
+            student = form.save(commit=False)
+            student.student_id = Student.objects.get(user=request.user).student_id
+            student.save()
             return JsonResponse(response_data)
         else:
             response_data = {}
