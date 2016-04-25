@@ -40,7 +40,7 @@
     <ul class="dropdown-menu">
       {% block results %}
         {% for el in studentform %}
-          <li><a href="#studentselector">{{el.first_name}} {{el.last_name}}</a></li>
+          <li><a class="dropdown-item">{{el.first_name}} {{el.last_name}}</a></li>
         {% endfor %}
       {% endblock %}
     </ul>
@@ -54,12 +54,13 @@
 <br><br>
 <script>
   $(document).ready(function() {
-    $('.dropdown-menu').clicked(function () {
-      var name = $(this).val();
-      var temp = name.split();
+    $('.dropdown-item').click(function () {
+      var name = $(this)[0].innerHTML;
+      console.log(name);
+      var temp = name.toString().split(' ');
       $.ajax({
-        type: "POST",
-        url: "",
+        type: "GET",
+        url: "returndata/",
         data: {
           fname: temp[0],
           lname: temp[1]

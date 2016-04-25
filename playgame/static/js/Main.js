@@ -7,8 +7,6 @@ soccer.game = new Phaser.Game(800,600, Phaser.AUTO, '');
 var frame = "";
 var color = "";
 var delay = 0;
-var num1 = 4;
-var num2 = 3;
 var text = "";
 
 loadPlayState();

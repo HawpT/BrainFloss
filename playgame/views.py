@@ -48,6 +48,7 @@ def play(request):
 
 
 @login_required(login_url="login/")
+@csrf_exempt
 def stats(request):
     if request.method == 'GET':
         s = Student.objects.filter(user=request.user)
@@ -63,15 +64,25 @@ def teacherdash(request):
 
 
 @login_required(login_url="login/")
+@csrf_exempt
 def teacherstats(request):
-    if request.method == 'GET':
-        s = Student.objects.all()
-        a = Level_One.objects.all()
-        return render(request, "teacherstats.html", {'studentform': s, 'scoreform': a})
-    elif request.method == 'POST':
+    s = Student.objects.all()
+    a = Level_One.objects.all()
+    return render(request, "teacherstats.html", {'studentform': s, 'scoreform': a})
 
-        return JsonResponse()
 
 
 class IndexView(TemplateView):
     template_name = 'home.html'
+
+@login_required(login_url="login/")
+@csrf_exempt
+def ReturnData(request):
+    if request.method == 'GET':
+        json = request.GET
+        s = Student.objects.filter(first_name=json['fname']).filter(last_name=json['lname'])
+        print(s)
+        a = Level_One.objects.filter(student_id=s['ID'])
+        return JsonResponse({'studentform': s, 'scoreform': a})
+
+
