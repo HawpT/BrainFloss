@@ -7,6 +7,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
+from .forms import Level_One
 from .forms import SubmitScores
 from .forms import Student
 
@@ -48,8 +49,13 @@ def play(request):
 
 @login_required(login_url="login/")
 def stats(request):
-    return render(request, "stats.html")
+    if request.method == 'GET':
+        s = Student.objects.filter(user=request.user)
+        a = Level_One.objects.all()
+        return render(request, "stats.html", {'studentform': s, 'scoreform': a})
+    elif request.method == 'POST':
 
+        return JsonResponse()
 
 @login_required(login_url="login/")
 def teacherdash(request):
@@ -58,7 +64,13 @@ def teacherdash(request):
 
 @login_required(login_url="login/")
 def teacherstats(request):
-    return render(request, "teacherstats.html")
+    if request.method == 'GET':
+        s = Student.objects.all()
+        a = Level_One.objects.all()
+        return render(request, "teacherstats.html", {'studentform': s, 'scoreform': a})
+    elif request.method == 'POST':
+
+        return JsonResponse()
 
 
 class IndexView(TemplateView):

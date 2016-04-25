@@ -29,21 +29,19 @@ class Level_One(models.Model):
                    "  @user: " + str(stu_ref.first_name) + " " + str(stu_ref.last_name)
 
     def score(self):
-        stu_ref = Student.objects.get(student_id=self.student_id)  # student who answered this problem
-        if self.problem_type == 1:
+        if int(self.problem_type) == 1:
             if (int(self.op1) + int(self.op2)) == int(self.student_answer):
                 return 1
             else:
                 return 0
-        elif self.problem_type == 2:
+        elif int(self.problem_type) == 2:
             if (int(self.op1) - int(self.op2)) == int(self.student_answer):
                 return 1
             else:
                 return 0
-        elif self.problem_type == 3:
+        elif int(self.problem_type) == 3:
             return "Level " + str(self.problem_level) + " Digits Problem: " + str(self.op1) \
-                   + " is in the " + str(self.student_answer) + "'s place." + \
-                   "  @user: " + str(stu_ref.first_name) + " " + str(stu_ref.last_name)
+                   + " is in the " + str(self.student_answer) + "'s place."
 
 
 class Student(models.Model):
@@ -53,7 +51,7 @@ class Student(models.Model):
     student_id = models.IntegerField(blank=False, null=True)
 
     def __str__(self):
-        return "User: " + str(self.user) + " Name: " + str(self.first_name) + " " + str(self.last_name) + " ID: " + str(self.student_id)
+        return " Name: " + str(self.first_name) + " " + str(self.last_name) + " ID: " + str(self.student_id)
 
     def get_student_fname(self):
         return self.first_name

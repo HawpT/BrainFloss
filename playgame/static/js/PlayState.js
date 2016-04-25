@@ -359,13 +359,7 @@ soccer.PlayState.prototype = {
         if (winCondition < 10 && winCondition > -10 && answer.length > 0) {
             moveDistance = 175;
             //WRITE TO THE DATABASE
-            //create_post();
-//            $("#op1").val(operand1);
-//            $("#op2").val(operand2);
-//            $("#student_answer").val(parseInt(answer));
-//            $("#problem_type").val(questionType);
-//            $("#problem_level").val(problemLevel);
-//            $("#student_id").val(2179);
+
             $.ajax({
                 url: "",
                 type: "POST",
@@ -544,7 +538,7 @@ soccer.PlayState.prototype = {
 
         //based on the first number, ensure the second number does not make their sum exceed 10
         if (questionType === 1) {
-            n = n % (10 - r)
+            n = (n % (11 - r)) - 1
         }
 
         if (r > n)
