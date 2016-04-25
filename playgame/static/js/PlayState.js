@@ -2,27 +2,6 @@ var soccer = soccer || {};
 
 var operand1, operand2, questionType, playTypePair, problemLevel,answer;
 
-//WRITES TO DATABASE
-function create_post() {
-    console.log("create post is working");
-    $.ajax({
-        url: "create_post/",
-        type: "POST",
-        data: {the_post: $('#post_text').val()},
-        success: function (json) {
-            $('#post_text').val('');
-            console.log(json);
-            console.log("success");
-        },
-        error: function (xhr, errmsg, err) {
-            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
-                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        }
-    })
-    //end ajax
-}
-
 var loadPlayState = function (){
  
     var answerOutput, validate, problem;
@@ -43,13 +22,13 @@ soccer.PlayState.prototype = {
 
     create: function () {
         //sounds
-         var music = soccer.game.add.audio('backgroundMusic');
-        // var firstWon = soccer.game.add.audio('wonFirst');
-        // var secondWon = soccer.game.add.audio('wonSecond');
-        // var lostFirst = soccer.game.add.audio('lostFirst');
+        //var music = soccer.game.add.audio('backgroundMusic');
+        //var firstWon = soccer.game.add.audio('wonFirst');
+        //var secondWon = soccer.game.add.audio('wonSecond');
+        //var lostFirst = soccer.game.add.audio('lostFirst');
         //var lostSecond = soccer.game.add.audio('lostSecond');
-       //  var kick = soccer.game.add.audio('kick');
-        music.loopFull();
+        //var kick = soccer.game.add.audio('kick');
+        //music.loopFull();
        
         
         //initial variable declarations
@@ -381,6 +360,35 @@ soccer.PlayState.prototype = {
             moveDistance = 175;
             //WRITE TO THE DATABASE
             //create_post();
+//            $("#op1").val(operand1);
+//            $("#op2").val(operand2);
+//            $("#student_answer").val(parseInt(answer));
+//            $("#problem_type").val(questionType);
+//            $("#problem_level").val(problemLevel);
+//            $("#student_id").val(2179);
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    op1: operand1,
+                    op2: operand2,
+                    student_answer: parseInt(answer),
+                    problem_type: questionType,
+                    problem_level: problemLevel,
+                    student_id: 2179
+                },
+                success: function(json){
+                    console.log(json);
+                },
+                error : function(xhr,errmsg,err) {
+                    // Show an error
+                    $('#results').html("<div class='alert-box alert radius' data-alert>"+
+                    "Oops! We have encountered an error. <a href='#' class='close'>&times;</a></div>"); // add error to the dom
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+
+
 
             //ADDITION
             if (questionType === 1) {

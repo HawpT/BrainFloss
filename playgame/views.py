@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.http import JsonResponse
 from .forms import SubmitScores
 
 
@@ -21,11 +23,19 @@ def home(request):
 
 
 @login_required(login_url="login/")
+@csrf_exempt
 def play(request):
     if request.method == 'POST':
         form = SubmitScores(request.POST)
         if form.is_valid():
-            return HttpResponse("thanks")
+            response_data = {}
+            response_data['msg'] = 'Post was successful.'
+            print("Post success.")
+            return JsonResponse(response_data)
+        else:
+            response_data = {}
+            response_data['msg'] = 'Post was unsuccessful. Invalid form.'
+            return JsonResponse(response_data)
 
     else:
         form = SubmitScores()

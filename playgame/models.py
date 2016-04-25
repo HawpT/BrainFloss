@@ -16,12 +16,12 @@ class Score(models.Model):
 
 
 class Level_One(models.Model):
-    op1 = models.IntegerField(blank=False, null=True)
-    op2 = models.IntegerField(blank=True, null=True)
-    student_answer = models.IntegerField(blank=False, null=False)
-    problem_type = models.IntegerField(blank=False, null=False)
-    problem_level = models.IntegerField(blank=False, null=False)
-    student_id = models.IntegerField(blank=False, null=False)
+    op1 = models.IntegerField(blank=False, null=False, default="-1")
+    op2 = models.IntegerField(blank=True, null=True, default="-1")
+    student_answer = models.IntegerField(blank=False, null=False, default="-1")
+    problem_type = models.IntegerField(blank=False, null=False, default="-1")
+    problem_level = models.IntegerField(blank=False, null=False, default="-1")
+    student_id = models.IntegerField(blank=False, null=False, default="-1")
 
     def __str__(self):
         if self.problem_type[0] == "1":

@@ -17,6 +17,7 @@ class LoginForm(AuthenticationForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'name': 'password'})
     )
 
+
 class SubmitScores(ModelForm):
     class Meta:
         model = Level_One
