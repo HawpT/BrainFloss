@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^teacherstats/$', views.teacherstats, name='teacherstats'),
     # url(r'^$', views.game, name='base'), #extra
 
-    url(r'^teacherstats/returndata/$', views.ReturnData, name='returndata')
+    url(r'^teacherstats/returndata/$', views.ReturnData, name='returndata'),
+    url(r'^stats/returndata/$', views.ReturnData, name='returndata')
 
 ]

@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
@@ -58,6 +59,7 @@ def stats(request):
 
         return JsonResponse()
 
+
 @login_required(login_url="login/")
 def teacherdash(request):
     return render(request, "teacherdash.html")
@@ -71,18 +73,17 @@ def teacherstats(request):
     return render(request, "teacherstats.html", {'studentform': s, 'scoreform': a})
 
 
-
 class IndexView(TemplateView):
     template_name = 'home.html'
+
 
 @login_required(login_url="login/")
 @csrf_exempt
 def ReturnData(request):
     if request.method == 'GET':
         json = request.GET
-        s = Student.objects.filter(first_name=json['fname']).filter(last_name=json['lname'])
-        print(s)
-        a = Level_One.objects.filter(student_id=s['ID'])
-        return JsonResponse({'studentform': s, 'scoreform': a})
-
+        s = Student.objects.filter(first_name=json['fname']).filter(last_name=json['lname']).values('student_id')
+        a = Level_One.objects.filter(student_id__in=s)
+        a_serialized = serializers.serialize('json',a, fields=('op1', 'op2', 'student_answer', 'problem_type', 'problem_level', 'student_id'))
+        return JsonResponse({'studentdata': a_serialized}, safe=False)
 

@@ -11,177 +11,242 @@
     <div class="row">
         <div class="jumbotron">
             <h1>Hello, Teacher!</h1>
-            
-            
-            
-               <span style="color:#FF3D3D"> <h1>Check Your Student's Stats Here</h1></span>
+
+
+
+               <span style="color:#FF3D3D"> <h1>Check Your Student's Stats Here</h1>
+                 <table style="width:100%">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-</head>
+
 <body>
     
   <h2><span style= "color:blue">Student Search Selection:</span></h2>
 
-<div class="container">
-  <a>
-    <button href="" type="button" >Choose all students</button>
-  </a>
-</div>
+  <br><br>
 
-<br><br>
+  <div class="container">
+    <div class="dropdown">
+      <button id="allstudents" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose a student to view their stats
+      <span class="caret"></span></button>
 
-<div class="container">
-  <div class="dropdown">
-    <button id="allstudents" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose a student to view their stats
-    <span class="caret"></span></button>
-
-    <ul class="dropdown-menu">
-      {% block results %}
-        {% for el in studentform %}
-          <li><a class="dropdown-item">{{el.first_name}} {{el.last_name}}</a></li>
-        {% endfor %}
-      {% endblock %}
-    </ul>
+      <ul class="dropdown-menu">
+        {% block results %}
+          {% for el in studentform %}
+            <li><a class="dropdown-item">{{el.first_name}} {{el.last_name}}</a></li>
+          {% endfor %}
+        {% endblock %}
+      </ul>
+    </div>
   </div>
-</div>
 
-<br><br>
+  <br><br>
 
-<h2>Latest scores:</h2>
+  <h2>Latest scores:</h2>
 
-<br><br>
-<script>
-  $(document).ready(function() {
-    $('.dropdown-item').click(function () {
-      var name = $(this)[0].innerHTML;
-      console.log(name);
-      var temp = name.toString().split(' ');
-      $.ajax({
-        type: "GET",
-        url: "returndata/",
-        data: {
-          fname: temp[0],
-          lname: temp[1]
-        },
-        success: function (json) {
-          console.log("Received JSON: " + json);
-        },
-        error: function () {
-          console.log("Error retrieving scores.");
-        }
+  <br><br>
+
+  <script>
+    $(document).ready(function() {
+      $('.dropdown-item').click(function () {
+        var name = $(this)[0].innerHTML;
+        var temp = name.toString().split(' ');
+        $.ajax({
+          type: "GET",
+          url: "returndata/",
+          data: {
+            fname: temp[0],
+            lname: temp[1]
+          },
+          success: function (json) {
+            //we have all of that student's problems now
+            var name = temp[0] + " " + temp[1];
+            var ptype, question;
+
+            //arrays to save the data on how many problems we have total and correct vs incorrect
+            var add = [0, 0, 0, 0], countadd = [0, 0, 0, 0];
+            var sub = [0, 0, 0, 0], countsub = [0, 0, 0, 0];
+            var dig = [0, 0, 0, 0], countdig = [0, 0, 0, 0];
+
+            var L1dig = 0, L2dig = 0, L3dig = 0;
+            var jsonData = JSON.parse(json['studentdata']);
+
+            var htmlArray = new Array(), j = -1;
+            //step through the JSON dictionary
+            for (var i = 0; i < jsonData.length; i++) {
+              //grab individual fields from the dict
+              var fields = jsonData[i]['fields'];
+              var plvl = fields['problem_level'];
+              var op1 = fields['op1'];
+              var op2 = fields['op2'];
+              var ans = fields['student_answer'];
+
+
+              //format the question for each row
+              if (fields['problem_type'] == 1) {
+                ptype = "L" + plvl + " Addition Problem";
+                question = op1 + " + " + op2 + " = " + ans;
+                ++countadd[plvl];
+                if (op1 + op2 == ans) {
+                  ++add[plvl]
+                }
+              }
+              else if (fields['problem_type'] == 2) {
+                ptype = "L" + plvl + " Subtraction Problem";
+                question = op1 + " - " + op2 + " = " + ans;
+
+                ++countsub[plvl];
+                if (op1 - op2 == ans) {
+                  ++sub[plvl]
+                }
+              }
+              else if (fields['problem_type'] == 3) {
+                ptype = "L" + plvl + " Digits Problem";
+                question = op1 + " + " + op2 + " = " + ans;
+
+                ++countdig[plvl];
+                if (op1 + op2 == ans) {
+                  ++dig[plvl]
+                }
+
+              }
+              //add to our HTML array
+              htmlArray[++j] = '<tr><td>';
+              htmlArray[++j] = ptype;
+              htmlArray[++j] = '</td><td>';
+              htmlArray[++j] = question;
+              htmlArray[++j] = '</td></tr>';
+            }
+
+            $('#L1add').html("Level 1 Addition: " + add[1] + "/" + countadd[1] + " correct.");
+            $('#L2add').html("Level 2 Addition: " + add[2] + "/" + countadd[2] + " correct.");
+            $('#L3add').html("Level 3 Addition: " + add[3] + "/" + countadd[3] + " correct.");
+            $('#L1sub').html("Level 1 Subtraction: " + sub[1] + "/" + countsub[1] + " correct.");
+            $('#L2sub').html("Level 2 Subtraction: " + sub[2] + "/" + countsub[2] + " correct.");
+            $('#L3sub').html("Level 3 Subtraction: " + sub[3] + "/" + countsub[3] + " correct.");
+  //          $('#L1dig').html("Level 1 Digits: " + dig[1] + "/" + countdig[1] + " correct.");
+  //          $('#L2dig').html("Level 2 Digits: " + dig[2] + "/" + countdig[2] + " correct.");
+  //          $('#L3dig').html("Level 3 Digits: " + dig[3] + "/" + countdig[3] + " correct.");
+            $('#studentname').html(name);
+            $('#scorereport').html(htmlArray.join(''));
+
+
+            //draw awesome charts
+            var data = google.visualization.arrayToDataTable([
+              [name, 'Level 1 add', 'Level 2 add', 'Level 3 add','Level 1 sub', 'Level 2 sub', 'Level 3 sub'],
+              ['Problem Type', parseFloat(add[1]/countadd[1])*100, parseFloat(add[2]/countadd[2])*100, parseFloat(add[3]/countadd[3])*100,
+                parseFloat(sub[1]/countsub[1])*100, parseFloat(sub[2]/countsub[2])*100, parseFloat(sub[3]/countsub[3])*100]
+            ]);
+
+            var options = {
+              title: 'Student Scores',
+              legend: "top",
+              chartArea: {width: '75%'},
+              colors: ['#b0120a', '#ffab91', "#ffab30", "#00FFFF", "#afcb22", "#dadb10"],
+              hAxis: {
+                title: 'Score',
+                minValue: 0
+              },
+              vAxis: {
+                title: 'Student Name'
+              }
+            };
+            chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
+
+            // Set chart options
+            options = {'title':'Percentages Based on Cumulative Scores: ',
+              legend: 'Top',
+            };
+
+            // Instantiate and draw our chart, passing in some options.
+            chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
+            chart.draw(data, options);
+
+          },
+          error: function () {
+            console.log("Error retrieving scores.");
+            $("#scorereport").html("<tr><td>Error Retrieving Student Scores</td></tr>");
+          }
+        })
       })
     })
-  })
-</script>
-<table id="scorereport" style="width:35%">
-  {% block allscores %}
-    {% for student in studentform %}
-      {% for score in scoreform %}
-        {% if score.student_id == student.student_id %}
-          <tr>
-            <td>{{student.first_name}} {{student.last_name}}</td>
+  </script>
+  <div>
+    <div id = "studentname"></div>
+    <div id="L1add"></div>
+    <div id="L2add"></div>
+    <div id="L3add"></div>
+    <div id="L1sub"></div>
+    <div id="L2sub"></div>
+    <div id="L3sub"></div>
+    <div id="L1dig"></div>
+    <div id="L2dig"></div>
+    <div id="L3dig"></div>
+  </div>
 
-            <!--Dynamic Problem Types-->
-            {% if score.problem_type == 1 %}
-            <td>Level {{score.problem_level}} Addition</td>
-            {% endif %}
-            {% if score.problem_type == 2 %}
-            <td>Level {{score.problem_level}} Subtraction</td>
-            {% endif %}
-            {% if score.problem_type == 3 %}
-            <td>Level {{score.problem_level}} Digits</td>
-            {% endif %}
+  <br><br>
 
-            <!--Dynamic Problem Output-->
-            {% if score.problem_type == 1 %}
-            <td>{{score.op1}} + {{score.op2}} = {{score.student_answer}}</td>
-            {% endif %}
-            {% if score.problem_type == 2 %}
-            <td>{{score.op1}} - {{score.op2}} = {{score.student_answer}}</td>
-            {% endif %}
-            {% if score.problem_type == 3 %}
-            <td>Not yet implemented</td>
-            {% endif %}
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawBarColors);
+    var chart;
+    function drawBarColors() {
 
-          </tr>
-        {% endif %}
-      {% endfor %}
-    {% endfor%}
-  {% endblock %}
-</table>
-
-<br>
-    
-    
-          
-               
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  google.charts.load('current', {packages: ['corechart', 'bar']});
-  google.charts.setOnLoadCallback(drawBarColors);
-
-  function drawBarColors() {
-    var data = google.visualization.arrayToDataTable([
-      ['Student', 'Level 1 add', 'Level 2 add', 'Level 3 add','Level 1 sub', 'Level 2 sub', 'Level 3 sub'],
-      ['Sarah', 89, 67, 45, 78, 67, 54],
-      ['Larry', 88, 78, 66, 67, 56, 45],
-      ['Mary', 100, 100, 100, 100, 100, 100],
-
-    ]);
-
-    var options = {
-      title: 'Student Scores',
-      legend: "top",
-      chartArea: {width: '75%'},
-      colors: ['#b0120a', '#ffab91', "#ffab30", "#00FFFF", "#afcb22", "#dadb10"],
-      hAxis: {
-        title: 'Score',
-        minValue: 0
-      },
-      vAxis: {
-        title: 'Student Name'
-      }
-    };
-    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-
-
-    // Set chart options
-    var options = {'title':'Percentages Based on Cumulative Scores: ',
-      legend: 'Top',
-                   };
-
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
-    chart.draw(data, options);
-  }
-
-
-</script>
+    }
+  </script>
   </head>
-  <body>
-     <!--Div that will hold the pie chart-->
+  <div id="datacharts">
     <div id="pie_chart" style="width:1100px; height:500px;"></div>
     <div id="chart_div" style="width: 1100px; height: 500px;"></div>
-  </body>
+  </div>
 
-                       
-                        
-                        
-                      
-               
-              
-               
 
+  <h3 id="indprobs">Individual problems</h3>
+  <table id="scorereport" style="width:35%">
+    <!--OLD DJANGO SNIPPETS TO PRINT ALL STUDENTS-->
+    <!--{% block allscores %}-->
+    <!--{% for student in studentform %}-->
+    <!--{% for score in scoreform %}-->
+    <!--{% if score.student_id == student.student_id %}-->
+    <!--<tr>-->
+    <!--<td>{{student.first_name}} {{student.last_name}}</td>-->
+
+    <!--&lt;!&ndash;Dynamic Problem Types&ndash;&gt;-->
+    <!--{% if score.problem_type == 1 %}-->
+    <!--<td>Level {{score.problem_level}} Addition</td>-->
+    <!--{% endif %}-->
+    <!--{% if score.problem_type == 2 %}-->
+    <!--<td>Level {{score.problem_level}} Subtraction</td>-->
+    <!--{% endif %}-->
+    <!--{% if score.problem_type == 3 %}-->
+    <!--<td>Level {{score.problem_level}} Digits</td>-->
+    <!--{% endif %}-->
+
+    <!--&lt;!&ndash;Dynamic Problem Output&ndash;&gt;-->
+    <!--{% if score.problem_type == 1 %}-->
+    <!--<td>{{score.op1}} + {{score.op2}} = {{score.student_answer}}</td>-->
+    <!--{% endif %}-->
+    <!--{% if score.problem_type == 2 %}-->
+    <!--<td>{{score.op1}} - {{score.op2}} = {{score.student_answer}}</td>-->
+    <!--{% endif %}-->
+    <!--{% if score.problem_type == 3 %}-->
+    <!--<td>Not yet implemented</td>-->
+    <!--{% endif %}-->
+
+    <!--</tr>-->
+    <!--{% endif %}-->
+    <!--{% endfor %}-->
+    <!--{% endfor%}-->
+    <!--{% endblock %}-->
+  </table>
 
                 </span>
-                
-            
             </body>
-            
-         
         </div>
     </div>
 </div>
