@@ -22,13 +22,13 @@ soccer.PlayState.prototype = {
 
     create: function () {
         //sounds
-        //var music = soccer.game.add.audio('backgroundMusic');
+        var music = soccer.game.add.audio('backgroundMusic');
         //var firstWon = soccer.game.add.audio('wonFirst');
         //var secondWon = soccer.game.add.audio('wonSecond');
         //var lostFirst = soccer.game.add.audio('lostFirst');
         //var lostSecond = soccer.game.add.audio('lostSecond');
         //var kick = soccer.game.add.audio('kick');
-        //music.loopFull();
+        music.loopFull();
        
         
         //initial variable declarations
@@ -538,7 +538,7 @@ soccer.PlayState.prototype = {
 
         //based on the first number, ensure the second number does not make their sum exceed 10
         if (questionType === 1) {
-            n = (n % (11 - r)) - 1
+            n = n % (10 - r)
         }
 
         if (r > n)
