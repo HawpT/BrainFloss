@@ -12,7 +12,15 @@
 
                 <span style="color:#FF3D3D"> <h1>Check Your Stats</h1>
                 <table style="width:100%">
+                    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                    <script>
+                        google.charts.load('current', {packages: ['corechart', 'bar']});
+                        google.charts.setOnLoadCallback(drawBarColors);
+                        var chart;
+                        function drawBarColors() {
 
+                        }
+                    </script>
                     <br><br>
 
                     <h3 id="latestscores"></h3>
@@ -109,7 +117,7 @@
                                     //draw awesome charts
                                     var data = google.visualization.arrayToDataTable([
                                         [name, 'Level 1 add', 'Level 2 add', 'Level 3 add','Level 1 sub', 'Level 2 sub', 'Level 3 sub'],
-                                        ['Problem Type', parseFloat(add[1]/countadd[1])*100, parseFloat(add[2]/countadd[2])*100, parseFloat(add[3]/countadd[3])*100,
+                                        ['', parseFloat(add[1]/countadd[1])*100, parseFloat(add[2]/countadd[2])*100, parseFloat(add[3]/countadd[3])*100,
                                             parseFloat(sub[1]/countsub[1])*100, parseFloat(sub[2]/countsub[2])*100, parseFloat(sub[3]/countsub[3])*100]
                                     ]);
 
@@ -123,7 +131,7 @@
                                             minValue: 0
                                         },
                                         vAxis: {
-                                            title: 'Student Name'
+                                            title: 'Problem Type'
                                         }
                                     };
                                     chart = new google.visualization.BarChart(document.getElementById('chart_div'));
@@ -163,17 +171,9 @@
 
                     <br><br>
 
-                    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-                    <script>
-                        google.charts.load('current', {packages: ['corechart', 'bar']});
-                        google.charts.setOnLoadCallback(drawBarColors);
-                        var chart;
-                        function drawBarColors() {
 
-                        }
-                    </script>
                     </head>
-                    
+
                     <div id="datacharts">
                         <div id="pie_chart" style="width:1100px; height:500px;"></div>
                         <div id="chart_div" style="width: 1100px; height: 500px;"></div>
